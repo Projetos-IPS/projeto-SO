@@ -16,7 +16,7 @@ public class FileLoader {
 
     public void Load(String filename) throws FileNotFoundException {
         String txt = ".txt";
-        String path = "../knap_tests_extended/" + filename + txt;
+        String path = "knap_tests_extended/" + filename + txt;
         File file = new File(path);
         Scanner scanner = new Scanner(file);
         String fileContent;
