@@ -23,23 +23,22 @@ public class FileLoader2 {
         Scanner scanner = new Scanner(file);
         String fileContent;
         int count = 0;
-        int countValue = 0;
-        int countWeight = 0;
+        int countIndex = 0;
+        int countingLines = 0;
 
         while (scanner.hasNext()) {
             fileContent = scanner.next();
 
             if (count == 2) {
-                if (countValue % 2 == 0 ) {
-                    if (countValue != 0) countValue--;
-                    value[countValue] = Integer.parseInt(fileContent);
-                    countValue++;
+                if (countingLines % 2 == 0) {
+                    value[countIndex] = Integer.parseInt(fileContent);
+                    countingLines++;
                 } else {
-                    weight[countWeight] = Integer.parseInt(fileContent);
-                    countWeight++;
-                    countValue++;
+                    weight[countIndex] = Integer.parseInt(fileContent);
+                    countIndex++;
+                    countingLines++;
 
-                    if (countWeight == getItems()) {
+                    if (countIndex == items) {
                         count++;
                     }
                 }
@@ -54,6 +53,7 @@ public class FileLoader2 {
                 setMax_weight(Integer.parseInt(fileContent));
                 max_weight = getMax_weight();
                 count++;
+                countingLines++;
             }
 
             if (count == 0) {
@@ -62,18 +62,19 @@ public class FileLoader2 {
                 value = new int[getItems()];
                 weight = new int[getItems()];
                 count++;
+                countingLines++;
             }
         }
     }
 
-
     public void printFile() {
         System.out.println(getItems());
         System.out.println(getMax_weight());
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < getItems(); i++) {
             System.out.print(value[i] + "|");
             System.out.print(weight[i] + "\n");
         }
+        System.out.println(getIdeal_value());
     }
 
     public int getItems() { return items; }
@@ -86,18 +87,9 @@ public class FileLoader2 {
 
     public int[] getValue() { return value; }
 
-    public void setValue(int value, int index) { this.value[index] = value; }
-
     public int[] getWeight() { return weight; }
-
-    public void setWeight(int weight, int index) { this.weight[index] = weight; }
 
     public int getIdeal_value() { return ideal_value; }
 
     public void setIdeal_value(int ideal_value) { this.ideal_value = ideal_value; }
-
-
-    public void setValue(int[] value) {
-        this.value = value;
-    }
 }
