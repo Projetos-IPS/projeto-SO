@@ -8,10 +8,12 @@ public class FileLoader {
     private int max_weight;
     private int[] values;
     private int[] weights;
+    private int ideal_value;
 
     public FileLoader() {
         this.items = 0;
         this.max_weight = 0;
+        this.ideal_value = 0;
     }
 
     public void Load(String filename) throws FileNotFoundException {
@@ -66,6 +68,15 @@ public class FileLoader {
     public void printArray(int[] arr) {
         for (int i = 0; i < arr.length; i++)
             System.out.print(arr[i] + "|");
+    }
+
+    public void printFile() {
+        System.out.println(getItems());
+        System.out.println(getMax_weight());
+        for (int i = 0; i < 5; i++) {
+            System.out.print(values[i] + "|");
+            System.out.print(weights[i] + "\n");
+        }
     }
 
     public int getItems() { return items; }
