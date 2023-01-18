@@ -1,4 +1,5 @@
 package Algorithm;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -6,66 +7,74 @@ import java.util.Scanner;
 public class FileLoader {
     private int items;
     private int max_weight;
-    private int[] values;
-    private int[] weights;
+    private int[] value;
+    private int[] weight;
+    private int ideal_value;
 
     public FileLoader() {
         this.items = 0;
         this.max_weight = 0;
+        this.ideal_value = 0;
     }
 
     public void Load(String filename) throws FileNotFoundException {
-        String txt = ".txt";
-        String path = "knap_tests_extended/" + filename + txt;
+        String path = "knap_tests/" + filename + ".txt";
         File file = new File(path);
         Scanner scanner = new Scanner(file);
         String fileContent;
-
-        int[] valuesX = new int[1];
-        int[] weightsX = new int[1];
         int count = 0;
-        int count2 = 0;
+        int countIndex = 0;
+        int countingLines = 0;
 
         while (scanner.hasNext()) {
             fileContent = scanner.next();
 
-            if (count == 0) {
-                setItems(Integer.parseInt(fileContent));
-                valuesX = new int[getItems()];
-                weightsX = new int[getItems()];
+            if (count == 2) {
+                if (countingLines % 2 == 0) {
+                    value[countIndex] = Integer.parseInt(fileContent);
+                    countingLines++;
+                } else {
+                    weight[countIndex] = Integer.parseInt(fileContent);
+                    countIndex++;
+                    countingLines++;
+
+                    if (countIndex == items) {
+                        count++;
+                    }
+                }
+            }
+
+            if (count == 3) {
+                setIdeal_value(Integer.parseInt(fileContent));
+                ideal_value = getIdeal_value();
             }
 
             if (count == 1) {
                 setMax_weight(Integer.parseInt(fileContent));
+                max_weight = getMax_weight();
                 count++;
-            } else if (count == 2) {
-                valuesX[count2] = Integer.parseInt(fileContent);
-                count2++;
-
-                if (count2 == getItems()) {
-                    setValues(valuesX);
-                    count2 = 0;
-                    count++;
-                }
-            } else if (count == 3) {
-                weightsX[count2] = Integer.parseInt(fileContent);
-                count2++;
-
-                if (count2 == getItems()) {
-                    setWeights(weightsX);
-                    count2 = 0;
-                    count++;
-                }
+                countingLines++;
             }
 
-            if (count == 0)
+            if (count == 0) {
+                setItems(Integer.parseInt(fileContent));
+                items = getItems();
+                value = new int[getItems()];
+                weight = new int[getItems()];
                 count++;
+                countingLines++;
+            }
         }
     }
 
-    public void printArray(int[] arr) {
-        for (int i = 0; i < arr.length; i++)
-            System.out.print(arr[i] + "|");
+    public void printFile() {
+        System.out.println(getItems());
+        System.out.println(getMax_weight());
+        for (int i = 0; i < getItems(); i++) {
+            System.out.print(value[i] + "|");
+            System.out.print(weight[i] + "\n");
+        }
+        System.out.println(getIdeal_value());
     }
 
     public int getItems() { return items; }
@@ -76,11 +85,11 @@ public class FileLoader {
 
     public void setMax_weight(int max_weight) { this.max_weight = max_weight; }
 
-    public int[] getValues() { return values; }
+    public int[] getValue() { return value; }
 
-    public void setValues(int[] values) { this.values = values; }
+    public int[] getWeight() { return weight; }
 
-    public int[] getWeights() { return weights; }
+    public int getIdeal_value() { return ideal_value; }
 
-    public void setWeights(int[] weights) { this.weights = weights; }
+    public void setIdeal_value(int ideal_value) { this.ideal_value = ideal_value; }
 }
