@@ -30,7 +30,7 @@ public class Main {
 
         for (int i = 0; i < teste.length; i++)
         {
-            System.out.println("resultado " + i + ": " + results[i]);
+            System.out.println("indice " + i + ": " + results[i]);
 
         }
 
