@@ -6,7 +6,7 @@ public class Solution {
     int values[];
     int sumValues, sumWeights, level;
 
-    public Solution(int weights[], int values[]){
+    public Solution(int values[], int weights[]){
         this.weights = weights;
         this.values = values;
     }

@@ -44,8 +44,32 @@ public class Ajkp {
 
     public Solution calculateLowerBound()
     {
-        int finalValues[];
-        int finalWeights[];
+        sortItems();
+        int items = file.getItems();
+        int maxWeight = file.getMax_weight();
+        int weights[] = getWeights();
+        int finalValues[] = new int[items];
+        int finalWeights[] = new int[items];
+        int somaW = 0;
+        int c = 0;
+
+        for (int i = 0; i < items; i++) {
+           somaW += weights[i];
+           while (somaW < maxWeight)
+           {
+               c = i+1;
+               break;//o c é o primeiro indice a não poder ser colocado na mochila
+           }
+        }
+
+        for(int j = 0; j < c; j++)
+        {
+            finalWeights[j] = 1;
+            finalValues[j] = 1;
+        }
+
+        Solution lowerBound = new Solution(finalValues, finalWeights);
+        return lowerBound;
     }
 
 

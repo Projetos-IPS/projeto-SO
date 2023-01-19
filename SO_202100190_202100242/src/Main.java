@@ -19,11 +19,17 @@ public class Main {
 
         System.out.println("Enter number of seconds: ");
         int seconds = Integer.parseInt(scanner.nextLine());*/
-
+        file.Load(fileName);
         int items = file.getItems();
         Ajkp start = new Ajkp(fileName);
 
+        Solution lb = start.calculateLowerBound();
+        System.out.println("Ocupação da mochila feito o lowerbound: ");
+        System.out.println(Arrays.toString(lb.getValues()));;
+        System.out.println(Arrays.toString(lb.getWeights()));
+
         start.sortItems();
+        System.out.println("Mochila depois de organizada: ");
         System.out.println(Arrays.toString(start.getValues()));
         System.out.println(Arrays.toString(start.getWeights()));
 
