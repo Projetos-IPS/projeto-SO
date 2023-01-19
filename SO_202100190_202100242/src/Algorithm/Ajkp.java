@@ -41,7 +41,13 @@ public class Ajkp {
     public int[] getWeights() {
         return weights;
     }
-    
+
+    public Solution calculateLowerBound()
+    {
+        int finalValues[];
+        int finalWeights[];
+    }
+
 
     /* public int[] beamSearch(){
 
