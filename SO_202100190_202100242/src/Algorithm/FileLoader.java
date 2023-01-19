@@ -3,7 +3,6 @@ package Algorithm;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-import java.util.Formatter;
 
 public class FileLoader {
     public static final String RESET = "\u001B[0m";
