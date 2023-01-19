@@ -5,10 +5,12 @@ import java.io.FileNotFoundException;
 public class Ajkp extends Thread {
     private FileLoader file = new FileLoader();
     private String filename;
+    int[] values;
+    int[] weights;
     private double seconds;
 
-    int[] values = file.getValue();
-    int[] weights = file.getWeight();
+    //int[] values = file.getValue();
+    //int[] weights = file.getWeight();
 
     public Ajkp(String filename, double seconds) throws FileNotFoundException {
         this.filename = filename;
@@ -29,25 +31,53 @@ public class Ajkp extends Thread {
         }
     }
 
+    public Solution calculateLowerBound() {
+        initialSolution();
 
-    public int[] BeamSearch(int[] lowerBound) {
+        int items = file.getItems();
+        int maxWeight = file.getMax_weight();
+        int weights[] = getWeights();
+
+        int finalValues[] = new int[items];
+        int finalWeights[] = new int[items];
+
+        int somaW = 0;
+        int c = 0;
+
+        for (int i = 0; i < items; i++) {
+            somaW += weights[i];
+
+            while (somaW < maxWeight) {
+                c = i+1;
+                break; //o c é o primeiro indice a não poder ser colocado na mochila
+            }
+        }
+
+        for(int j = 0; j < c; j++) {
+            finalWeights[j] = 1;
+            finalValues[j] = 1;
+        }
+
+        Solution lowerBound = new Solution(finalValues, finalWeights);
+
+        return lowerBound;
+    }
+
+
+    /*public int[] beamSearch(int[] lowerBound) {
         int[] bestSolution = lowerBound;
 
 
 
         return bestSolution;
     }
+     */
 
-    /*public int[] LowerBound() {
-        int[] lowerBoundSolution;
-
-
-
-        return lowerBoundSolution;
-    }*/
-
-    public void initialSolution(int[] values, int[] weights) {
+    public void initialSolution() {
         int items = file.getItems();
+        values = file.getValue();
+        weights = file.getWeight();
+
         int tempV = 0;
         int tempW = 0;
 
@@ -64,4 +94,8 @@ public class Ajkp extends Thread {
             }
         }
     }
+
+    public int[] getValues() { return values; }
+
+    public int[] getWeights() { return weights; }
 }
