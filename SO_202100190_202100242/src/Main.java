@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.Arrays;
 import java.util.Scanner;
 import Algorithm.*;
 public class Main {
@@ -13,26 +14,18 @@ public class Main {
         System.out.println("Document name: ");
         String fileName = scanner.nextLine();
 
-        file.Load(fileName);
-        int[] teste = file.getWeight();
-        int[] teste2 = file.getValue();
-        System.out.println(file.getMax_weight());
-
       /*  System.out.println("Enter number of threads: ");
         int threads = Integer.parseInt(scanner.nextLine());
 
         System.out.println("Enter number of seconds: ");
         int seconds = Integer.parseInt(scanner.nextLine());*/
 
-        ajkp start = new ajkp(fileName);
+        int items = file.getItems();
+        Ajkp start = new Ajkp(fileName);
 
-        int[] results = start.initialSolution();
-
-        for (int i = 0; i < teste.length; i++)
-        {
-            System.out.println("indice " + i + ": " + results[i]);
-
-        }
+        start.sortItems();
+        System.out.println(Arrays.toString(start.getValues()));
+        System.out.println(Arrays.toString(start.getWeights()));
 
     }
 }
