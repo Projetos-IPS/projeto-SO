@@ -24,7 +24,7 @@ public class Main {
         Ajkp start = new Ajkp(fileName);
 
         Solution lb = start.calculateLowerBound();
-        System.out.println("Ocupação da mochila feito o lowerbound: ");
+        System.out.println("Ocupação da mochila feito no lowerbound: ");
         System.out.println(Arrays.toString(lb.getValues()));;
         System.out.println(Arrays.toString(lb.getWeights()));
 
