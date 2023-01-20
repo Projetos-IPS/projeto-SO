@@ -86,7 +86,7 @@ public class Ajkp {
         int firstElementWeight = 0;
         int sum_all = 0;
 
-        if(ogsolutionElements <= items) {
+      //  if(ogsolutionElements <= items) {
             for (int i = 0; i < ogsolutionElements; i++)
             {
                 newSolution[i] = s.getArray()[i];
@@ -122,7 +122,7 @@ public class Ajkp {
             }
 
             w = maxWeight - sum_all - firstElementWeight;
-        }
+      //  }
 
     return w;
 
