@@ -30,11 +30,10 @@ public class Main {
 
         System.out.println("Solução parcial: ");
         System.out.println(Arrays.toString(test.getArray()));
-        System.out.println("Upperbound:" + teste);
+        System.out.println("Upperbound: " + teste);
 
         int lb = start.calculateLowerBound();
-        System.out.println("Lowerbound: ");
-        System.out.println(lb);
+        System.out.println("Lowerbound: " + lb);
 
         start.sortItems();
         System.out.println("Mochila depois de organizada: ");
