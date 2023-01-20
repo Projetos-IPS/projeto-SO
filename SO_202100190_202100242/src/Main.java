@@ -14,12 +14,19 @@ public class Main {
         System.out.println("Document name: ");
         String fileName = scanner.nextLine();
 
-      /*  System.out.println("Enter number of threads: ");
+        System.out.println("Enter number of threads: ");
         int threads = Integer.parseInt(scanner.nextLine());
 
         System.out.println("Enter number of seconds: ");
-        int seconds = Integer.parseInt(scanner.nextLine());*/
-        file.Load(fileName);
+        int seconds = Integer.parseInt(scanner.nextLine());
+
+        ChildThread listThreads [] = new ChildThread[threads];
+        for(int i = 0; i < threads; i++)
+        {
+            listThreads[i] = new ChildThread();
+            listThreads[i].start();
+        }
+       /* file.Load(fileName);
         int items = file.getItems();
         Ajkp start = new Ajkp(fileName);
 
@@ -43,7 +50,7 @@ public class Main {
         start.sortItems();
         System.out.println("Mochila depois de organizada: ");
         System.out.println(Arrays.toString(start.getValues()));
-        System.out.println(Arrays.toString(start.getWeights()));
+        System.out.println(Arrays.toString(start.getWeights()));*/
 
     }
 }

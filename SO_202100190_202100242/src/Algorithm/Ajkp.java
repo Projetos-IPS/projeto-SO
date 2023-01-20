@@ -183,7 +183,10 @@ public class Ajkp {
     return ub;
     }
 
-    /* public int[] beamSearch(){
+
+
+
+    /* public void beamSearch(Solution lb){
 
 
     }*/
