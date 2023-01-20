@@ -2,8 +2,9 @@ package Algorithm;
 
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
-public class Ajkp {
+public class Ajkp extends Thread{
     FileLoader file = new FileLoader();
     int[] values;
     int[] weights;
@@ -13,6 +14,16 @@ public class Ajkp {
         file.Load(fileName);
     }
 
+    /*@Override
+    public void run() {
+        try {
+            Ajkp();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }*/
     public void sortItems(){
         values = file.getValue();
         weights = file.getWeight();
@@ -77,7 +88,7 @@ public class Ajkp {
         return lb;
     }
 
-    public Bounds calculateUpperBound(Solution s) {
+    public int calculateUpperBound(Solution s) {
 
         sortItems();
         int items = file.getItems();
@@ -133,10 +144,10 @@ public class Ajkp {
 
         //  cálculo do upperbound
 
-        double ub1 = 0.0;
-        double ub2 = 0.0;
-        int ub1_int = 0;
-        int ub2_int = 0;
+        double ub1;
+        double ub2;
+        int ub1_int;
+        int ub2_int;
 
         int val;
         int wei;
@@ -144,7 +155,7 @@ public class Ajkp {
         int wei2;
         int val3;
         int wei3;
-        int max = 0;
+        int max;
 
         if (c == items) // esta parte aqui não está 100%
         {
@@ -165,27 +176,27 @@ public class Ajkp {
             wei3 = getWeights()[c - 1];
         }
 
-        ub1 = sum_values + sum_values2 + (double)(10*((double)val/(double)wei));
-        ub2 = sum_values + sum_values2 + (double)(val2-(wei2-10)*(double)val3/(double)wei3);
+        ub1 = sum_values + sum_values2 + (double)(w*((double)val/(double)wei));
+        ub2 = sum_values + sum_values2 + (double)(val2-(wei2-w)*(double)val3/(double)wei3);
 
         ub1_int = (int) ub1;
         ub2_int = (int) ub2;
 
-        if(ub1_int > ub2_int)
-            max = ub1_int;
-        else
-            max = ub2_int;
 
+        max = Math.max(ub1_int, ub2_int);
 
-        Solution ub_sol = new Solution(newSolution);
-        Bounds ub = new Bounds(ub_sol, max);
-
-    return ub;
+    return max;
     }
 
 
+    public ArrayList<Solution> getChilds(Solution solution)
+    {
+        ArrayList<Solution> childs = new ArrayList<>();
 
 
+
+        return childs;
+    }
     /* public void beamSearch(Solution lb){
 
 

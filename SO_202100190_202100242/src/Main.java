@@ -20,13 +20,15 @@ public class Main {
         System.out.println("Enter number of seconds: ");
         int seconds = Integer.parseInt(scanner.nextLine());
 
-        ChildThread listThreads [] = new ChildThread[threads];
+        /*ChildThread listThreads [] = new ChildThread[threads];
         for(int i = 0; i < threads; i++)
         {
             listThreads[i] = new ChildThread();
             listThreads[i].start();
-        }
-       /* file.Load(fileName);
+        }*/
+
+
+        file.Load(fileName);
         int items = file.getItems();
         Ajkp start = new Ajkp(fileName);
 
@@ -37,10 +39,8 @@ public class Main {
         System.out.println("Solução parcial: ");
         System.out.println(Arrays.toString(test.getArray()));
 
-        Bounds up = start.calculateUpperBound(test);
-        Solution ub_solution = up.getSolution();
-        System.out.println("Upperbound valor: " + up.getValue());
-        System.out.println("Upperbound solução apartir da solução parcial dada: " + Arrays.toString(ub_solution.getArray()));
+        int up = start.calculateUpperBound(test);
+        System.out.println("Upperbound valor: " + up);
 
         Bounds lb = start.calculateLowerBound();
         Solution lb_solution = lb.getSolution();
@@ -50,7 +50,7 @@ public class Main {
         start.sortItems();
         System.out.println("Mochila depois de organizada: ");
         System.out.println(Arrays.toString(start.getValues()));
-        System.out.println(Arrays.toString(start.getWeights()));*/
+        System.out.println(Arrays.toString(start.getWeights()));
 
     }
 }
