@@ -23,10 +23,16 @@ public class Main {
         int items = file.getItems();
         Ajkp start = new Ajkp(fileName);
 
+        int[] teste2 = {1,0,1,1,1};
+        Solution test = new Solution(teste2);
+        System.out.println("Teste: ");
+        System.out.println(Arrays.toString(test.getArray()));
         Solution lb = start.calculateLowerBound();
-        System.out.println("Ocupação da mochila feito no lowerbound: ");
-        System.out.println(Arrays.toString(lb.getValues()));;
-        System.out.println(Arrays.toString(lb.getWeights()));
+
+       int teste = start.calculateUpperBound(test);
+       System.out.println(teste);
+        System.out.println("Lowerbound: ");
+        System.out.println(Arrays.toString(lb.getArray()));
 
         start.sortItems();
         System.out.println("Mochila depois de organizada: ");

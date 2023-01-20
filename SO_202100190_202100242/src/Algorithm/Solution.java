@@ -2,20 +2,20 @@ package Algorithm;
 
 public class Solution {
    //guarda cada soluçao
-    int weights[];
-    int values[];
+    int items[];
     int sumValues, sumWeights, level;
 
-    public Solution(int values[], int weights[]){
-        this.weights = weights;
-        this.values = values;
+    public Solution(int items[]){
+        this.items = items;
     }
 
-    public int[] getWeights() {
-        return weights;
+    public int countElements(){
+        return items.length;
     }
 
-    public int[] getValues() {
-        return values;
+    public int[] getArray() {
+        return items;
     }
+
+
 }

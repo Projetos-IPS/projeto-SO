@@ -48,8 +48,7 @@ public class Ajkp {
         int items = file.getItems();
         int maxWeight = file.getMax_weight();
         int weights[] = getWeights();
-        int finalValues[] = new int[items];
-        int finalWeights[] = new int[items];
+        int lowerbound[] = new int[items];
         int somaW = 0;
         int c = 0;
 
@@ -64,14 +63,67 @@ public class Ajkp {
 
         for(int j = 0; j < c; j++)
         {
-            finalWeights[j] = 1;
-            finalValues[j] = 1;
+            lowerbound[j] = 1;
         }
 
-        Solution lowerBound = new Solution(finalValues, finalWeights);
+        Solution lowerBound = new Solution(lowerbound);
         return lowerBound;
     }
 
+    public int calculateUpperBound(Solution s) {
+
+        sortItems();
+        int items = file.getItems();
+        int maxWeight = file.getMax_weight();
+        int newSolution[] = new int[items];
+        int ogsolutionElements = s.countElements();
+        int[] weights = getWeights();
+        int c = 0;
+        int sum = 0;
+        int sum2 = 0;
+        int w = 0;
+        int firstElementIndex = 0;
+        int firstElementWeight = 0;
+        int sum_all = 0;
+
+        if(ogsolutionElements <= items) {
+            for (int i = 0; i < ogsolutionElements; i++) {
+                newSolution[i] = s.getArray()[i];
+                if (s.getArray()[i] == 1) {
+                    sum += weights[i];
+
+                    for (int j = ogsolutionElements; j < items; j++) {
+                        sum2 += weights[j];
+                        while ((sum + sum2) < maxWeight) {
+                            c = j;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            for (int x = 0; x < c; x++) {
+                if (newSolution[x] == 1) {
+                    firstElementIndex = x;
+                    firstElementWeight = weights[x];
+                    break;
+                }
+            }
+
+            for (int i = firstElementIndex+1; i < c; i++) {
+                sum_all += weights[i];
+
+                if (newSolution[i] == 0) {
+                    sum_all -= weights[i];
+                }
+            }
+
+            w = (maxWeight - sum_all) - firstElementWeight;
+        }
+
+    return w;
+
+    }
 
     /* public int[] beamSearch(){
 
