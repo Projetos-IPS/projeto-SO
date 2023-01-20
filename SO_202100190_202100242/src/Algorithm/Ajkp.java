@@ -42,7 +42,7 @@ public class Ajkp {
         return weights;
     }
 
-    public int calculateLowerBound()
+    public LowerBound calculateLowerBound()
     {
         sortItems();
         int items = file.getItems();
@@ -72,7 +72,9 @@ public class Ajkp {
             }
         }
 
-        return soma_final;
+        Solution lb_solution = new Solution(lowerbound);
+        LowerBound lb = new LowerBound(lb_solution, soma_final);
+        return lb;
     }
 
     public int calculateUpperBound(Solution s) {
