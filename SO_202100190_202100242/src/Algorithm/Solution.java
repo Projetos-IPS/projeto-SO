@@ -1,16 +1,14 @@
 package Algorithm;
 
 public class Solution {
-    int weights[];
-    int values[];
+    int[] solution;
     int sumValues, sumWeights, level;
 
-    public Solution(int values[], int weights[]) {
-            this.weights = weights;
-            this.values = values;
+    public Solution(int[] solution) {
+        this.solution = solution;
     }
 
-        public int[] getWeights() { return weights; }
+    public int countElements() { return solution.length; }
 
-        public int[] getValues() { return values; }
+    public int[] getSolution() { return solution; }
 }

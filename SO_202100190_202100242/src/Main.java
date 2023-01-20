@@ -28,5 +28,6 @@ public class Main {
         //file.printFile();
         Ajkp sort = new Ajkp(fileName, 20);
         sort.printLowerBound();
+        sort.printUpperBound();
     }
 }

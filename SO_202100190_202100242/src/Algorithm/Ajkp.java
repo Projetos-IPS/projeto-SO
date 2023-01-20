@@ -1,14 +1,17 @@
 package Algorithm;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Ajkp extends Thread {
     private FileLoader file = new FileLoader();
     private String filename;
-    int[] values;
-    int[] weights;
-    int items;
-    int maxWeight;
+    int[] values, weights, knapsackLowerBound;
+    int[] knapsackUpperBound = {1,0,-1,-1,-1,-1,-1,-1};
+    int indexLowerBound = 0;
+    int indexUpperBound = 0;
+    int items, maxWeight;
     private double seconds;
 
     public Ajkp(String filename, double seconds) throws FileNotFoundException {
@@ -20,9 +23,20 @@ public class Ajkp extends Thread {
         this.maxWeight = file.getMax_weight();
         this.values = file.getValue();
         this.weights = file.getWeight();
+        this.knapsackLowerBound = new int[items];
     }
 
     public void Ajkp() {
+        int[] b = {1, 0, 1, 1, 1, 0, 0, 0};
+        Solution initialSolution = new Solution(b);
+        ArrayList<Solution> a = new ArrayList<>();
+        a.add(initialSolution);
+
+
+
+
+
+
         int count = 0;
         double startTime, endTime;
         int[] finalKnapsack = new int[items];
@@ -31,65 +45,77 @@ public class Ajkp extends Thread {
         startTime = System.currentTimeMillis();
 
         while (System.currentTimeMillis() < seconds) {
-            finalKnapsack = lowerBound();
+            //finalKnapsack = lowerBound();
 
         }
     }
 
-    public int[] lowerBound() {
+    public int lowerBound() {
         sort();
-
-        int knapsack[] = new int[items];
-
+        int sumV = 0;
         int sumW = 0;
 
         for (int i = 0; i < items; i++) {
             sumW += weights[i];
-
             if (sumW <= maxWeight) {
-                knapsack[i] = 1;
+                knapsackLowerBound[i] = 1;
+                sumV += values[i];
             } else {
-                knapsack[i] = 0;
+                indexLowerBound = i + 1;
+                break;
             }
         }
 
-        return knapsack;
+        for (int i = indexLowerBound; i < items; i++)
+            knapsackLowerBound[i] = -1;
+
+        return sumV;
     }
 
-    public int[] upperBound() {
+    public int upperBound() {
         sort();
-
-        int c = 0;
+        int sumV = 0;
         int sumW = 0;
-        int knapsack[] = new int[items];
-        knapsack[0] = 1;
-        knapsack[1] = 0;
 
-        for (int i = 0; i < items; i++) {
-            if (i == 0) {
-                knapsack[0] = 1;
+        for (int i = 0; i < items; i++)
+            if (knapsackUpperBound[i] == 1) {
                 sumW += weights[i];
+                sumV += values[i];
             }
-            else if (i == 1)
-                knapsack[1] = 0;
-            else {
+
+        for (int i = 0; i < items; i++)
+            if (knapsackUpperBound[i] == -1) {
                 sumW += weights[i];
-                if (sumW > maxWeight) {
-                    c = i;
+                if (sumW <= maxWeight) {
+                    knapsackUpperBound[i] = 1;
+                    sumV += values[i];
+                } else {
+                    indexUpperBound = i + 1;
                     break;
                 }
             }
 
-        }
+        for (int i = indexUpperBound; i < items; i++)
+            knapsackUpperBound[i] = -1;
+
+        return sumV + 1;
     }
 
-    /*public Solution beamSearch() {
+    public void selectSolutions(int n, List<Solution> list) {
+        //n = items / 2;
+
+    }
+
+    public Solution beamSearch(int n, int indexLowerBound) {
         //Solution bestSolution = lowerBound();
+        Solution initialSolution = new Solution(knapsackUpperBound);
 
 
 
-        //return bestSolution;
-    }*/
+        
+
+        return initialSolution;
+    }
 
     public void sort() {
         int tempV = 0;
@@ -122,16 +148,32 @@ public class Ajkp extends Thread {
     }
 
     public void printLowerBound() {
-        int[] knapsack = lowerBound();
-
+        int lowerBound = lowerBound();
         System.out.println("\n▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
         System.out.print("KnapSack LowerBound:\n[");
         for (int i = 0; i < items; i++) {
             if (i != items-1)
-                System.out.print(knapsack[i] + ", ");
+                System.out.print(knapsackLowerBound[i] + ", ");
             else
-                System.out.println(knapsack[i] + "]");
+                System.out.println(knapsackLowerBound[i] + "]");
         }
+        System.out.println("Index LowerBound: " + indexLowerBound);
+        System.out.println("LowerBound Value: " + lowerBound);
+        System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
+    }
+
+    public void printUpperBound() {
+        int upperBound = upperBound();
+        System.out.println("\n▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
+        System.out.print("KnapSack UpperBound:\n[");
+        for (int i = 0; i < items; i++) {
+            if (i != items-1)
+                System.out.print(knapsackUpperBound[i] + ", ");
+            else
+                System.out.println(knapsackUpperBound[i] + "]");
+        }
+        System.out.println("Index UpperBound: " + indexUpperBound);
+        System.out.println("UpperBound Value: " + upperBound);
         System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
     }
 }
