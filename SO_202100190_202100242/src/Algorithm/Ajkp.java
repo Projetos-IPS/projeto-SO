@@ -42,13 +42,15 @@ public class Ajkp {
         return weights;
     }
 
-    public Solution calculateLowerBound()
+    public int calculateLowerBound()
     {
         sortItems();
         int items = file.getItems();
         int maxWeight = file.getMax_weight();
         int weights[] = getWeights();
+        int values[] = getValues();
         int lowerbound[] = new int[items];
+        int soma_final = 0;
         int somaW = 0;
         int c = 0;
 
@@ -64,10 +66,13 @@ public class Ajkp {
         for(int j = 0; j < c; j++)
         {
             lowerbound[j] = 1;
+            if(lowerbound[j] == 1)
+            {
+                soma_final += values[j];
+            }
         }
 
-        Solution lowerBound = new Solution(lowerbound);
-        return lowerBound;
+        return soma_final;
     }
 
     public int calculateUpperBound(Solution s) {
@@ -154,7 +159,6 @@ public class Ajkp {
             max = ub2_int;
 
     return max;
-
     }
 
     /* public int[] beamSearch(){

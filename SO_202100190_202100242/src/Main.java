@@ -26,16 +26,15 @@ public class Main {
         int[] teste2 = {1,0};
         Solution test = new Solution(teste2);
         int teste = start.calculateUpperBound(test);
-        System.out.println("W:" + teste);
+
 
         System.out.println("Solução parcial: ");
         System.out.println(Arrays.toString(test.getArray()));
-        Solution lb = start.calculateLowerBound();
+        System.out.println("Upperbound:" + teste);
 
-
-
+        int lb = start.calculateLowerBound();
         System.out.println("Lowerbound: ");
-        System.out.println(Arrays.toString(lb.getArray()));
+        System.out.println(lb);
 
         start.sortItems();
         System.out.println("Mochila depois de organizada: ");
