@@ -42,7 +42,7 @@ public class Ajkp {
         return weights;
     }
 
-    public LowerBound calculateLowerBound()
+    public Bounds calculateLowerBound()
     {
         sortItems();
         int items = file.getItems();
@@ -73,11 +73,11 @@ public class Ajkp {
         }
 
         Solution lb_solution = new Solution(lowerbound);
-        LowerBound lb = new LowerBound(lb_solution, soma_final);
+        Bounds lb = new Bounds(lb_solution, soma_final);
         return lb;
     }
 
-    public int calculateUpperBound(Solution s) {
+    public Bounds calculateUpperBound(Solution s) {
 
         sortItems();
         int items = file.getItems();
@@ -160,7 +160,11 @@ public class Ajkp {
         else
             max = ub2_int;
 
-    return max;
+
+        Solution ub_sol = new Solution(newSolution);
+        Bounds ub = new Bounds(ub_sol, max);
+
+    return ub;
     }
 
     /* public int[] beamSearch(){

@@ -25,15 +25,20 @@ public class Main {
 
         int[] teste2 = {1,0};
         Solution test = new Solution(teste2);
-        int teste = start.calculateUpperBound(test);
 
 
         System.out.println("Solução parcial: ");
         System.out.println(Arrays.toString(test.getArray()));
-        System.out.println("Upperbound: " + teste);
 
-        int lb = start.calculateLowerBound();
-        System.out.println("Lowerbound: " + lb);
+        Bounds up = start.calculateUpperBound(test);
+        Solution ub_solution = up.getSolution();
+        System.out.println("Upperbound valor: " + up.getValue());
+        System.out.println("Upperbound solução apartir da solução parcial dada: " + Arrays.toString(ub_solution.getArray()));
+
+        Bounds lb = start.calculateLowerBound();
+        Solution lb_solution = lb.getSolution();
+        System.out.println("Lowerbound valor: " + lb.getValue());
+        System.out.println("Lowerbound solução: " + Arrays.toString(lb_solution.getArray()));
 
         start.sortItems();
         System.out.println("Mochila depois de organizada: ");
