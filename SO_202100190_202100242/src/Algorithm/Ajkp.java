@@ -54,7 +54,7 @@ public class Ajkp {
 
         for (int i = 0; i < items; i++) {
            somaW += weights[i];
-           while (somaW < maxWeight)
+           while (somaW <= maxWeight)
            {
                c = i+1;
                break;//o c é o primeiro indice a não poder ser colocado na mochila
@@ -87,38 +87,41 @@ public class Ajkp {
         int sum_all = 0;
 
         if(ogsolutionElements <= items) {
-            for (int i = 0; i < ogsolutionElements; i++) {
+            for (int i = 0; i < ogsolutionElements; i++)
+            {
                 newSolution[i] = s.getArray()[i];
                 if (s.getArray()[i] == 1) {
                     sum += weights[i];
 
                     for (int j = ogsolutionElements; j < items; j++) {
                         sum2 += weights[j];
-                        while ((sum + sum2) < maxWeight) {
-                            c = j;
+                        while ((sum + sum2) <= maxWeight) {
+                            newSolution[j] = 1;
+                            c = j+ogsolutionElements;
                             break;
                         }
                     }
                 }
             }
 
-            for (int x = 0; x < c; x++) {
-                if (newSolution[x] == 1) {
+            for (int x = 0; x < c; x++)
+            {
+                if (newSolution[x] == 1)
+                {
                     firstElementIndex = x;
                     firstElementWeight = weights[x];
                     break;
                 }
             }
 
-            for (int i = firstElementIndex+1; i < c; i++) {
-                sum_all += weights[i];
-
-                if (newSolution[i] == 0) {
-                    sum_all -= weights[i];
+            for (int k = firstElementIndex+1; k < c; k++)
+            {
+                if(newSolution[k] == 1) {
+                    sum_all += weights[k];
                 }
             }
 
-            w = (maxWeight - sum_all) - firstElementWeight;
+            w = maxWeight - sum_all - firstElementWeight;
         }
 
     return w;

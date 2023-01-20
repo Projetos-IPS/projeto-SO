@@ -23,7 +23,7 @@ public class Main {
         int items = file.getItems();
         Ajkp start = new Ajkp(fileName);
 
-        int[] teste2 = {1,0,1,1,1};
+        int[] teste2 = {1,0};
         Solution test = new Solution(teste2);
         System.out.println("Teste: ");
         System.out.println(Arrays.toString(test.getArray()));
