@@ -78,6 +78,7 @@ public class Ajkp {
         int newSolution[] = new int[items];
         int ogsolutionElements = s.countElements();
         int[] weights = getWeights();
+        int[] values = getValues();
         int c = 0;
         int sum = 0;
         int sum2 = 0;
@@ -85,6 +86,8 @@ public class Ajkp {
         int firstElementIndex = 0;
         int firstElementWeight = 0;
         int sum_all = 0;
+        int sum_values = 0;
+        int sum_values2 = 0;
 
       //  if(ogsolutionElements <= items) {
             for (int i = 0; i < ogsolutionElements; i++)
@@ -92,12 +95,13 @@ public class Ajkp {
                 newSolution[i] = s.getArray()[i];
                 if (s.getArray()[i] == 1) {
                     sum += weights[i];
+                    sum_values += values[i];
 
                     for (int j = ogsolutionElements; j < items; j++) {
                         sum2 += weights[j];
                         while ((sum + sum2) <= maxWeight) {
                             newSolution[j] = 1;
-                            c = j+ogsolutionElements;
+                            c = j+1;
                             break;
                         }
                     }
@@ -118,13 +122,38 @@ public class Ajkp {
             {
                 if(newSolution[k] == 1) {
                     sum_all += weights[k];
+                    sum_values2 += values[k];
                 }
             }
 
             w = maxWeight - sum_all - firstElementWeight;
-      //  }
 
-    return w;
+      //  cálculo do upperbound
+
+        double ub1 = 0.0;
+        double ub2 = 0.0;
+        int ub1_int = 0;
+        int ub2_int = 0;
+        int val = getValues()[c+1];
+        int wei = getWeights()[c+1];
+        int val2 = getValues()[c];
+        int wei2 = getWeights()[c];
+        int val3 = getValues()[c-1];
+        int wei3 = getWeights()[c-1];
+        int max = 0;
+
+        ub1 = sum_values + sum_values2 + (double)(10*((double)val/(double)wei));
+        ub2 = sum_values + sum_values2 + (double)(val2-(wei2-10)*(double)val3/(double)wei3);
+
+        ub1_int = (int) ub1;
+        ub2_int = (int) ub2;
+
+        if(ub1_int > ub2_int)
+            max = ub1_int;
+        else
+            max = ub2_int;
+
+    return max;
 
     }
 
