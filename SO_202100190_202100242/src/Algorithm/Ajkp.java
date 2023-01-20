@@ -144,9 +144,9 @@ public class Ajkp {
         int wei2;
         int val3;
         int wei3;
-        int max;
+        int max = 0;
 
-        if (c == items) // esta parte aqui não está 100% 
+        if (c == items) // esta parte aqui não está 100%
         {
             c = 1;
             val = getValues()[c+1];
@@ -163,7 +163,6 @@ public class Ajkp {
             wei2 = getWeights()[c];
             val3 = getValues()[c - 1];
             wei3 = getWeights()[c - 1];
-            max = 0;
         }
 
         ub1 = sum_values + sum_values2 + (double)(10*((double)val/(double)wei));
