@@ -120,11 +120,15 @@ public class Ajkp extends Thread {
                     knapsackUpperBound[i] = 1;
                     sumV += values[i];
                     sumValues2 += values[i];
+                    if (i == items - 1)
+                        indexUpperBound = i;
                 } else {
-                    indexUpperBound = i + 1;
+                    indexUpperBound = i;
                     break;
                 }
             }
+        if (indexUpperBound == items - 1)
+            indexUpperBound--;
 
         for (int i = indexUpperBound; i < items; i++)
             knapsackUpperBound[i] = -1;
@@ -183,6 +187,18 @@ public class Ajkp extends Thread {
         
 
         return bestSolution;
+    }
+
+    public ArrayList<Solution> initialSolution() {
+        ArrayList<Solution> solutions = new ArrayList<>();
+        int[] newSolution = new int[items];
+
+        for(int i = 0; i < items; i++)
+            newSolution[i] = -1;
+
+        solutions.add(new Solution(newSolution));
+
+        return solutions;
     }
 
     public void sort() {
