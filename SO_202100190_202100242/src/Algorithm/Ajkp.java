@@ -8,7 +8,7 @@ public class Ajkp extends Thread {
     private FileLoader file = new FileLoader();
     private String filename;
     int[] values, weights;
-    Solution lowerBoundSolution, upperBoundSolution;
+    Solution lowerBoundSolution;
     int indexLowerBound = 0;
     int indexUpperBound = 0;
     int items, maxWeight;
@@ -99,9 +99,9 @@ public class Ajkp extends Thread {
         }
 
         for (int i = indexLowerBound - 1; i < items; i++)
-            knapsackLowerBound[i] = 0;
+            knapsackLowerBound[i] = -1;
 
-        lowerBoundSolution = new Solution(knapsackLowerBound, sumW2, sumV2, items);
+        lowerBoundSolution = new Solution(knapsackLowerBound, sumW2, sumV2, lowerBoundSolution.getLevel());
 
         return sumV;
     }
@@ -174,33 +174,30 @@ public class Ajkp extends Thread {
     }
 
 
-
     public ArrayList<Solution> getChilds(ArrayList<Solution> solutions) {
         ArrayList<Solution> childs = new ArrayList<>();
 
         for (Solution l : solutions) {
             int index = l.getLevel();
-            //if(index < )
-            int[] new_sol = l.getSolution();
-            new_sol[index] = 0;
-            l.setSolution(new_sol);
-            childs.add(l);
-            new_sol[index] = 1;
-            int w = 0;
-            int v = 0;
-            for (int i = 0; i < new_sol.length; i++)
-            {
-                if(new_sol[i] == 1)
-                {
-                    w += getWeights()[i];
-                    v += getValues()[i];
+            if (index < l.getLevel()) {
+                int[] new_sol = l.getSolution();
+                new_sol[index] = 0;
+                l.setSolution(new_sol);
+                childs.add(l);
+                new_sol[index] = 1;
+                int w = 0;
+                int v = 0;
+                for (int i = 0; i < new_sol.length; i++) {
+                    if (new_sol[i] == 1) {
+                        w += getWeights()[i];
+                        v += getValues()[i];
+                    }
                 }
-            }
-            if(w <= maxWeight)
-            {
-                childs.add(new Solution(new_sol, w, v, index+1));
-            }
+                if (w <= maxWeight) {
+                    childs.add(new Solution(new_sol, w, v, index + 1));
+                }
 
+            }
         }
         return childs;
     }
@@ -282,20 +279,11 @@ public class Ajkp extends Thread {
     }
 
     public void printUpperBound() {
-        int[] arr = {1, 0, -1, -1, -1, -1};
-        Solution arrS = new Solution(arr, 0,0,2);
+        int[] arr = {1, 0};
+        Solution arrS = new Solution(arr, 0,0,1);
         int upperBound = upperBound(arrS);
-        int[] upperBoundS = upperBoundSolution.getSolution();
         System.out.println("\n▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
-        System.out.print("KnapSack UpperBound:\n[");
-        for (int i = 0; i < items; i++) {
-            if (i != items-1)
-                System.out.print(upperBoundS[i] + ", ");
-            else
-                System.out.println(upperBoundS[i] + "]");
-        }
-        System.out.println("Index UpperBound: " + indexUpperBound);
-        System.out.println("UpperBound Value: " + upperBound);
+        System.out.println("UpperBound value: " + upperBound);
         System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
     }
 
