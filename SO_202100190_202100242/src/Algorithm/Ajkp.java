@@ -28,22 +28,12 @@ public class Ajkp extends Thread {
     }
 
 
-    public int Ajkp() {
+    public int Ajkp() throws FileNotFoundException, InterruptedException {
             sort();
 
+            file.Load(filename);
             Solution bestSolution = lowerBound();
 
-            /**
-             int[] b = {1, 0, 1, 1, 1, 0, 0, 0};
-             Solution initialSolution = new Solution(b);
-             ArrayList<Solution> a = new ArrayList<>();
-             a.add(initialSolution);
-
-             int count = 0;
-             double startTime, endTime;
-             int[] finalKnapsack = new int[items];
-
-             startTime = System.currentTimeMillis(); **/
             seconds = System.currentTimeMillis() + seconds * 1000;
 
             while (System.currentTimeMillis() < seconds) {
@@ -73,6 +63,17 @@ public class Ajkp extends Thread {
 
             return bestSolution.getSumValues();
         }
+    @Override
+    public void run() {
+        try {
+            Ajkp();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     public Solution lowerBound() {
@@ -97,7 +98,9 @@ public class Ajkp extends Thread {
         for (int i = indexLowerBound - 1; i < items; i++)
             knapsackLowerBound[i] = -1;
 
-        lowerBoundSolution = new Solution(knapsackLowerBound, sumW2, sumV, lowerBoundSolution.getLevel());
+        lowerBoundSolution = new Solution(knapsackLowerBound, sumW2, sumV, 0);
+        int level = lowerBoundSolution.getLevel();
+        lowerBoundSolution.setLevel(level);
 
         return lowerBoundSolution;
     }

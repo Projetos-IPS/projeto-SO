@@ -11,25 +11,21 @@ public class Main {
     public static final String RESET = "\u001B[0m";
     public static void main(String[] args) throws FileNotFoundException, InterruptedException {
 
-        /** MAIN FINAL - NÃO APAGAR
         Scanner scanner = new Scanner(System.in);
-        System.out.println(GREEN + "Enter command >" + RESET);
-        String command = scanner.nextLine();
 
-        String[] commandSplice = command.split(" ");
-        int test = Integer.parseInt(commandSplice[0]);
-        String fileName = commandSplice[1];
-        int threads = Integer.parseInt(commandSplice[2]);
-        int seconds = Integer.parseInt(commandSplice[3]);
-        **/
+        System.out.println("Enter file name:");
+        String fileName = scanner.nextLine();
 
-        FileLoader file = new FileLoader();
-        String fileName = "ex08";
+        System.out.println("Enter number of threads");
+        int threads = Integer.parseInt(scanner.nextLine());
 
-        file.Load(fileName);
-        //file.printFile();
-        Ajkp sort = new Ajkp(fileName, 20);
-        //sort.printLowerBound();
-        //sort.printUpperBound();
+        System.out.println("Enter number of seconds");
+        int seconds = Integer.parseInt(scanner.nextLine());
+
+        for(int i = 0; i<threads; i++){
+            Ajkp ajr = new Ajkp(fileName, seconds);
+            ajr.start();
+        }
+
     }
 }

@@ -11,6 +11,10 @@ public class Solution {
         this.level = level;
     }
 
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
     public void setSolution(int sol[]) {
         this.solution = sol;
     }
