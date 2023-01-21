@@ -71,17 +71,19 @@ public class Ajkp extends Thread {
         }
     }
 
-    public int lowerBound() {
+    public Solution lowerBound() {
         sort();
         int[] knapsackLowerBound = new int[items];
         int sumV = 0;
         int sumW = 0;
+        int sumW2 = 0;
 
         for (int i = 0; i < items; i++) {
             sumW += weights[i];
             if (sumW <= maxWeight) {
                 knapsackLowerBound[i] = 1;
                 sumV += values[i];
+                sumW2 += weights[i];
             } else {
                 indexLowerBound = i + 1;
                 break;
@@ -91,9 +93,9 @@ public class Ajkp extends Thread {
         for (int i = indexLowerBound - 1; i < items; i++)
             knapsackLowerBound[i] = -1;
 
-        lowerBoundSolution = new Solution(knapsackLowerBound);
+        lowerBoundSolution = new Solution(knapsackLowerBound, sumW2, sumV, lowerBoundSolution.getLevel());
 
-        return sumV;
+        return lowerBoundSolution;
     }
 
     public int upperBound(Solution partialSolution) {
