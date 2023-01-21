@@ -3,6 +3,7 @@ import java.util.Scanner;
 
 import Algorithm.Ajkp;
 import Algorithm.FileLoader;
+import Algorithm.Solution;
 
 public class Main {
     public static final String GREEN = "\u001B[32m";
@@ -27,7 +28,10 @@ public class Main {
         file.Load(fileName);
         //file.printFile();
         Ajkp sort = new Ajkp(fileName, 20);
-        sort.printLowerBound();
-        sort.printUpperBound();
+        //sort.printLowerBound();
+        //sort.printUpperBound();
+        int[] arr = {1, 0, -1, -1, -1, -1, -1, -1};
+        Solution arrS = new Solution(arr);
+        System.out.println(sort.upperBound(arrS));
     }
 }
