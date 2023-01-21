@@ -148,7 +148,6 @@ public class Ajkp extends Thread {
         }
 
         w = maxWeight - sumWeights - weights[firstIndex];
-        upperBoundSolution = new Solution(knapsackUpperBound);
 
         double ub1, ub2;
         int val = getValues()[indexUpperBound + 1];
@@ -158,9 +157,9 @@ public class Ajkp extends Thread {
         int val3 = getValues()[indexUpperBound - 1];
         int wei3 = getWeights()[indexUpperBound - 1];
 
-        ub1 = sumValues + sumValues2 + (w * ((double)val / (double)wei));
+        ub1 = sumValues + sumValues2 + (w * ((double) val / (double) wei));
         ub2 = sumValues + sumValues2 + (val2 - (wei2 - w) * (double) val3 / (double) wei3);
-        int max = Math.max((int)ub1, (int)ub2);
+        int max = Math.max((int) ub1, (int) ub2);
 
         //return sumV + 1;
         return max;
@@ -287,7 +286,7 @@ public class Ajkp extends Thread {
         System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
     }
 
-    public void printLowerBound() {
+    /**public void printLowerBound() {
         int lowerBound = lowerBound();
         int[] lowerBoundS = lowerBoundSolution.getSolution();
         System.out.println("\n▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
@@ -303,7 +302,7 @@ public class Ajkp extends Thread {
         System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
     }
 
-    /**public void printUpperBound() {
+    public void printUpperBound() {
         int[] arr = {1, 0, -1, -1, -1, -1};
         Solution arrS = new Solution(arr);
         int upperBound = upperBound(arrS);
