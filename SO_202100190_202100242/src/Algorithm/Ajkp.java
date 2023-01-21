@@ -232,19 +232,12 @@ public class Ajkp extends Thread {
         ArrayList<Solution> start = initialSolution();
 
         while (start.isEmpty() == false) {
-            int sum = 0;
             start = getChilds(start);
             for (Solution sol : start) {
                 int ub = upperBound(sol);
                 int lb_int = lb.getSumValues();
                 if (ub >= lb_int) {
-                    for (int i = 0; i < sol.countElements(); i++) {
-                        if (sol.getSolution()[i] == 1) {
-                            sum += values[i];
-                        }
-                    }
-
-                    if (sum > lb_int) {
+                    if (sol.getSumValues() > lb_int) {
                         lb = sol;
                     }
                 }
