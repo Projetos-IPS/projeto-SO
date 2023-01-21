@@ -72,12 +72,11 @@ public class Ajkp extends Thread {
         }
     }
 
-    public int lowerBound() {
+    public Solution lowerBound() {
         sort();
         int[] knapsackLowerBound = new int[items];
         int sumV = 0;
         int sumW = 0;
-        int sumV2 = 0;
         int sumW2 = 0;
 
         for (int i = 0; i < items; i++) {
@@ -85,27 +84,19 @@ public class Ajkp extends Thread {
             if (sumW <= maxWeight) {
                 knapsackLowerBound[i] = 1;
                 sumV += values[i];
+                sumW2 += weights[i];
             } else {
                 indexLowerBound = i + 1;
                 break;
             }
         }
 
-        for(int i = 0; i < items; i++)
-        {
-            if (knapsackLowerBound[i] == 1)
-            {
-                sumV2 += getValues()[i];
-                sumW2 += getWeights()[i];
-            }
-        }
-
         for (int i = indexLowerBound - 1; i < items; i++)
             knapsackLowerBound[i] = -1;
 
-        lowerBoundSolution = new Solution(knapsackLowerBound, sumW2, sumV2, lowerBoundSolution.getLevel());
+        lowerBoundSolution = new Solution(knapsackLowerBound, sumW2, sumV, lowerBoundSolution.getLevel());
 
-        return sumV;
+        return lowerBoundSolution;
     }
 
     public int upperBound(Solution partialSolution) {
@@ -237,15 +228,30 @@ public class Ajkp extends Thread {
             return list;
     }
 
-    public Solution beamSearch(int n, Solution lowerBoundSolution) {
-        Solution bestSolution = lowerBoundSolution;
+    public Solution beamSearch(int n, Solution lb) {
+        ArrayList<Solution> start = initialSolution();
 
+        while (start.isEmpty() == false) {
+            int sum = 0;
+            start = getChilds(start);
+            for (Solution sol : start) {
+                int ub = upperBound(sol);
+                int lb_int = lb.getSumValues();
+                if (ub >= lb_int) {
+                    for (int i = 0; i < sol.countElements(); i++) {
+                        if (sol.getSolution()[i] == 1) {
+                            sum += values[i];
+                        }
+                    }
 
-
-
-        
-
-        return bestSolution;
+                    if (sum > lb_int) {
+                        lb = sol;
+                    }
+                }
+            }
+            start = selectSolutions(n, start);
+        }
+        return lb;
     }
 
     public void sort() {
@@ -279,7 +285,7 @@ public class Ajkp extends Thread {
     }
 
     public void printLowerBound() {
-        int lowerBound = lowerBound();
+      //  int lowerBound = lowerBound();
         int[] lowerBoundS = lowerBoundSolution.getSolution();
         System.out.println("\n▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
         System.out.print("KnapSack LowerBound:\n[");
@@ -290,7 +296,7 @@ public class Ajkp extends Thread {
                 System.out.println(lowerBoundS[i] + "]");
         }
         System.out.println("Index LowerBound: " + indexLowerBound);
-        System.out.println("LowerBound Value: " + lowerBound);
+      //  System.out.println("LowerBound Value: " + lowerBound);
         System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
     }
 

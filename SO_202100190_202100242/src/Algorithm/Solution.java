@@ -15,6 +15,14 @@ public class Solution {
         this.solution = sol;
     }
 
+    public int getSumValues() {
+        return sumValues;
+    }
+
+    public int getSumWeights() {
+        return sumWeights;
+    }
+
     public int getLevel(){
         for(int i = 0; i < solution.length; i++)
         {
