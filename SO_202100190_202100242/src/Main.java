@@ -31,7 +31,7 @@ public class Main {
         //sort.printLowerBound();
         //sort.printUpperBound();
         int[] arr = {1, 0, -1, -1, -1, -1, -1, -1};
-        Solution arrS = new Solution(arr);
-        System.out.println(sort.upperBound(arrS));
+        //Solution arrS = new Solution(arr);
+        //System.out.println(sort.upperBound(arrS));
     }
 }

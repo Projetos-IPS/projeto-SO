@@ -3,6 +3,7 @@ package Algorithm;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Ajkp extends Thread {
     private FileLoader file = new FileLoader();
@@ -163,33 +164,86 @@ public class Ajkp extends Thread {
         return max;
     }
 
-    public ArrayList<Solution> getChilds(ArrayList<Solution> list) {
+    public ArrayList<Solution> initialSolution() {
+        ArrayList<Solution> solutions = new ArrayList<>();
+        int[] newSolution = new int[items];
+
+        for(int i = 0; i < items; i++)
+            newSolution[i] = -1;
+
+        solutions.add(new Solution(newSolution, 0,0,0));
+        return solutions;
+    }
+
+    public ArrayList<Solution> getChilds(ArrayList<Solution> solutions) {
         ArrayList<Solution> childs = new ArrayList<>();
 
-        for (Solution l : list) {
+        for (Solution l : solutions) {
+            int index = l.getLevel();
+            if (index < l.getLevel()) {
+                int[] new_sol = l.getSolution();
+                new_sol[index] = 0;
 
+                l.setSolution(new_sol);
+                childs.add(l);
+                new_sol[index] = 1;
+
+                int w = 0;
+                int v = 0;
+
+                for (int i = 0; i < new_sol.length; i++)
+                    if (new_sol[i] == 1) {
+                        w += getWeights()[i];
+                        v += getValues()[i];
+                    }
+
+                if (w <= maxWeight)
+                    childs.add(new Solution(new_sol, w, v, index + 1));
+
+            }
         }
-        return list;
+        return childs;
     }
 
-    public void selectSolutions(int n, List<Solution> list) {
-        //n = items / 2;
+    public ArrayList<Solution> selectSolutions(int n, ArrayList<Solution> list) {
+        int size = list.size();
+        Random rand = new Random();
+        ArrayList<Solution> selectedSolutions = new ArrayList<>();
 
+        if (size > n) {
+            for (int i = 0; i < n; i++) {
+                int selected = rand.nextInt(size);
+                Solution sol = list.get(selected);
 
+                if(!selectedSolutions.contains(sol))
+                    selectedSolutions.add(sol);
+            }
+            return selectedSolutions;
+        }
+        else
+            return list;
     }
 
-    public Solution beamSearch(int n, Solution lowerBoundSolution) {
-        Solution bestSolution = lowerBoundSolution;
+    public Solution beamSearch(int n, Solution lb) {
+        ArrayList<Solution> start = initialSolution();
 
+        while (start.isEmpty() == false) {
+            start = getChilds(start);
 
+            for (Solution sol : start) {
+                int ub = upperBound(sol);
+                int lb_int = lb.getSumValues();
 
-
-        
-
-        return bestSolution;
+                if (ub >= lb_int)
+                    if (sol.getSumValues()> lb_int)
+                        lb = sol;
+            }
+            start = selectSolutions(n, start);
+        }
+        return lb;
     }
 
-    public ArrayList<Solution> initialSolution() {
+    /*public ArrayList<Solution> initialSolution() {
         ArrayList<Solution> solutions = new ArrayList<>();
         int[] newSolution = new int[items];
 
@@ -199,7 +253,7 @@ public class Ajkp extends Thread {
         solutions.add(new Solution(newSolution));
 
         return solutions;
-    }
+    }*/
 
     public void sort() {
         int tempV = 0;
@@ -247,7 +301,7 @@ public class Ajkp extends Thread {
         System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
     }
 
-    public void printUpperBound() {
+    /**public void printUpperBound() {
         int[] arr = {1, 0, -1, -1, -1, -1};
         Solution arrS = new Solution(arr);
         int upperBound = upperBound(arrS);
@@ -263,7 +317,7 @@ public class Ajkp extends Thread {
         System.out.println("Index UpperBound: " + indexUpperBound);
         System.out.println("UpperBound Value: " + upperBound);
         System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
-    }
+    }**/
 
     public int[] getValues() { return values; };
 
