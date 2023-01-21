@@ -1,8 +1,10 @@
 package Algorithm;
 
 import java.io.FileNotFoundException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Ajkp extends Thread {
     private FileLoader file = new FileLoader();
@@ -173,7 +175,6 @@ public class Ajkp extends Thread {
         return max;
     }
 
-
     public ArrayList<Solution> getChilds(ArrayList<Solution> solutions) {
         ArrayList<Solution> childs = new ArrayList<>();
 
@@ -215,10 +216,25 @@ public class Ajkp extends Thread {
         return solutions;
     }
 
-    public void selectSolutions(int n, List<Solution> list) {
-        //n = items / 2;
+    public ArrayList<Solution> selectSolutions(int n, ArrayList<Solution> list) {
+        int size = list.size();
+        Random rand = new Random();
+        ArrayList<Solution> selectedSolutions = new ArrayList<>();
 
-
+        if (size > n)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                int selected = rand.nextInt(size);
+                Solution sol = list.get(selected);
+                if(!selectedSolutions.contains(sol)){
+                    selectedSolutions.add(sol);
+                }
+            }
+            return selectedSolutions;
+        }
+        else
+            return list;
     }
 
     public Solution beamSearch(int n, Solution lowerBoundSolution) {
