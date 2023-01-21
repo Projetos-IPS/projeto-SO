@@ -9,7 +9,7 @@ public class Ajkp extends Thread {
     private FileLoader file = new FileLoader();
     private String filename;
     int[] values, weights;
-    Solution lowerBoundSolution, upperBoundSolution;
+    Solution lowerBoundSolution;
     int indexLowerBound = 0;
     int indexUpperBound = 0;
     int items, maxWeight;
@@ -26,25 +26,21 @@ public class Ajkp extends Thread {
         this.weights = file.getWeight();
     }
 
-    public void Ajkp() {
+    public int Ajkp() {
         sort();
 
-        /**
-        int[] b = {1, 0, 1, 1, 1, 0, 0, 0};
-        Solution initialSolution = new Solution(b);
-        ArrayList<Solution> a = new ArrayList<>();
-        a.add(initialSolution);**/
+        Solution bestSolution = lowerBound();
 
+        /**
         int count = 0;
         double startTime, endTime;
         int[] finalKnapsack = new int[items];
 
+        startTime = System.currentTimeMillis(); **/
         seconds = System.currentTimeMillis() + seconds * 1000;
-        startTime = System.currentTimeMillis();
 
         while (System.currentTimeMillis() < seconds) {
-            lowerBound();
-            Solution bestSolution = lowerBoundSolution;
+            bestSolution = lowerBound();
 
             int sumValuesBest = 0;
             int sumValuesTmp = 0;
@@ -64,11 +60,11 @@ public class Ajkp extends Thread {
                     sumValuesTmp += values[i];
             }
 
-            if (sumValuesBest > sumValuesTmp) {
+            if (sumValuesBest > sumValuesTmp)
                 bestSolution = tmpSolution;
-            }
-            count++;
         }
+
+        return bestSolution.getSumValues();
     }
 
     public Solution lowerBound() {
@@ -243,18 +239,6 @@ public class Ajkp extends Thread {
         }
         return lb;
     }
-
-    /*public ArrayList<Solution> initialSolution() {
-        ArrayList<Solution> solutions = new ArrayList<>();
-        int[] newSolution = new int[items];
-
-        for(int i = 0; i < items; i++)
-            newSolution[i] = -1;
-
-        solutions.add(new Solution(newSolution));
-
-        return solutions;
-    }*/
 
     public void sort() {
         int tempV = 0;
