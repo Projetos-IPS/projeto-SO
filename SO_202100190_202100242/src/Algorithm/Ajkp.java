@@ -75,6 +75,8 @@ public class Ajkp extends Thread {
         int[] knapsackLowerBound = new int[items];
         int sumV = 0;
         int sumW = 0;
+        int sumV2 = 0;
+        int sumW2 = 0;
 
         for (int i = 0; i < items; i++) {
             sumW += weights[i];
@@ -87,10 +89,19 @@ public class Ajkp extends Thread {
             }
         }
 
+        for(int i = 0; i < items; i++)
+        {
+            if (knapsackLowerBound[i] == 1)
+            {
+                sumV2 += getValues()[i];
+                sumW2 += getWeights()[i];
+            }
+        }
+
         for (int i = indexLowerBound - 1; i < items; i++)
             knapsackLowerBound[i] = 0;
 
-        lowerBoundSolution = new Solution(knapsackLowerBound);
+        lowerBoundSolution = new Solution(knapsackLowerBound, sumW2, sumV2, items);
 
         return sumV;
     }
@@ -120,11 +131,15 @@ public class Ajkp extends Thread {
                     knapsackUpperBound[i] = 1;
                     sumV += values[i];
                     sumValues2 += values[i];
+                    if (i == items - 1)
+                        indexUpperBound = i;
                 } else {
-                    indexUpperBound = i + 1;
+                    indexUpperBound = i;
                     break;
                 }
             }
+        if (indexUpperBound == items - 1)
+            indexUpperBound--;
 
         for (int i = indexUpperBound; i < items; i++)
             knapsackUpperBound[i] = -1;
@@ -141,7 +156,6 @@ public class Ajkp extends Thread {
         }
 
         w = maxWeight - sumWeights - weights[firstIndex];
-        upperBoundSolution = new Solution(knapsackUpperBound);
 
         double ub1, ub2;
         int val = getValues()[indexUpperBound + 1];
@@ -151,21 +165,57 @@ public class Ajkp extends Thread {
         int val3 = getValues()[indexUpperBound - 1];
         int wei3 = getWeights()[indexUpperBound - 1];
 
-        ub1 = sumValues + sumValues2 + (w * ((double)val / (double)wei));
+        ub1 = sumValues + sumValues2 + (w * ((double) val / (double) wei));
         ub2 = sumValues + sumValues2 + (val2 - (wei2 - w) * (double) val3 / (double) wei3);
-        int max = Math.max((int)ub1, (int)ub2);
+        int max = Math.max((int) ub1, (int) ub2);
 
         //return sumV + 1;
         return max;
     }
 
-    public ArrayList<Solution> getChilds(ArrayList<Solution> list) {
+
+
+    public ArrayList<Solution> getChilds(ArrayList<Solution> solutions) {
         ArrayList<Solution> childs = new ArrayList<>();
 
-        for (Solution l : list) {
+        for (Solution l : solutions) {
+            int index = l.getLevel();
+            //if(index < )
+            int[] new_sol = l.getSolution();
+            new_sol[index] = 0;
+            l.setSolution(new_sol);
+            childs.add(l);
+            new_sol[index] = 1;
+            int w = 0;
+            int v = 0;
+            for (int i = 0; i < new_sol.length; i++)
+            {
+                if(new_sol[i] == 1)
+                {
+                    w += getWeights()[i];
+                    v += getValues()[i];
+                }
+            }
+            if(w <= maxWeight)
+            {
+                childs.add(new Solution(new_sol, w, v, index+1));
+            }
 
         }
-        return list;
+        return childs;
+    }
+
+    public ArrayList<Solution> initialSolution(){
+        ArrayList<Solution> solutions = new ArrayList<>();
+
+        int[] newSolution = new int[items];
+        for(int i = 0; i < items; i++)
+        {
+            newSolution[i] = -1;
+        }
+
+        solutions.add(new Solution(newSolution, 0,0,0));
+        return solutions;
     }
 
     public void selectSolutions(int n, List<Solution> list) {
@@ -233,7 +283,7 @@ public class Ajkp extends Thread {
 
     public void printUpperBound() {
         int[] arr = {1, 0, -1, -1, -1, -1};
-        Solution arrS = new Solution(arr);
+        Solution arrS = new Solution(arr, 0,0,2);
         int upperBound = upperBound(arrS);
         int[] upperBoundS = upperBoundSolution.getSolution();
         System.out.println("\n▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");

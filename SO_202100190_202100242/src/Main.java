@@ -1,4 +1,5 @@
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import Algorithm.Ajkp;
@@ -31,6 +32,7 @@ public class Main {
         //sort.printLowerBound();
         //sort.printUpperBound();
         int[] arr = {1, 0, -1, -1, -1, -1, -1, -1};
+        ArrayList<Solution> sol = sort.initialSolution();
         Solution arrS = new Solution(arr);
         System.out.println(sort.upperBound(arrS));
     }
