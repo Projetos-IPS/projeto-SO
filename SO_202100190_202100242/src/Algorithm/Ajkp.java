@@ -88,7 +88,7 @@ public class Ajkp extends Thread {
         }
 
         for (int i = indexLowerBound - 1; i < items; i++)
-            knapsackLowerBound[i] = 0;
+            knapsackLowerBound[i] = -1;
 
         lowerBoundSolution = new Solution(knapsackLowerBound);
 
