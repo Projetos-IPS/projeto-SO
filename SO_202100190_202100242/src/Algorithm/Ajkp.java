@@ -27,50 +27,53 @@ public class Ajkp extends Thread {
         this.weights = file.getWeight();
     }
 
-    public void Ajkp() {
-        sort();
 
-        /**
-        int[] b = {1, 0, 1, 1, 1, 0, 0, 0};
-        Solution initialSolution = new Solution(b);
-        ArrayList<Solution> a = new ArrayList<>();
-        a.add(initialSolution);**/
+    public int Ajkp() {
+            sort();
 
-        int count = 0;
-        double startTime, endTime;
-        int[] finalKnapsack = new int[items];
+            Solution bestSolution = lowerBound();
 
-        seconds = System.currentTimeMillis() + seconds * 1000;
-        startTime = System.currentTimeMillis();
+            /**
+             int[] b = {1, 0, 1, 1, 1, 0, 0, 0};
+             Solution initialSolution = new Solution(b);
+             ArrayList<Solution> a = new ArrayList<>();
+             a.add(initialSolution);
 
-        while (System.currentTimeMillis() < seconds) {
-            lowerBound();
-            Solution bestSolution = lowerBoundSolution;
+             int count = 0;
+             double startTime, endTime;
+             int[] finalKnapsack = new int[items];
 
-            int sumValuesBest = 0;
-            int sumValuesTmp = 0;
+             startTime = System.currentTimeMillis(); **/
+            seconds = System.currentTimeMillis() + seconds * 1000;
 
-            int n = items / 2;
-            Solution tmpSolution = beamSearch(n, bestSolution);
+            while (System.currentTimeMillis() < seconds) {
+                bestSolution = lowerBound();
 
-            for (int i = 0; i < items; i++) {
-                int[] bestSolutionBinary = bestSolution.getSolution();
-                if (bestSolutionBinary[i] == 1)
-                    sumValuesBest += values[i];
+                int sumValuesBest = 0;
+                int sumValuesTmp = 0;
+
+                int n = items / 2;
+                Solution tmpSolution = beamSearch(n, bestSolution);
+
+                for (int i = 0; i < items; i++) {
+                    int[] bestSolutionBinary = bestSolution.getSolution();
+                    if (bestSolutionBinary[i] == 1)
+                        sumValuesBest += values[i];
+                }
+
+                for (int i = 0; i < items; i++) {
+                    int[] tmpSolutionBinary = tmpSolution.getSolution();
+                    if (tmpSolutionBinary[i] == 1)
+                        sumValuesTmp += values[i];
+                }
+
+                if (sumValuesBest > sumValuesTmp)
+                    bestSolution = tmpSolution;
             }
 
-            for (int i = 0; i < items; i++) {
-                int[] tmpSolutionBinary = tmpSolution.getSolution();
-                if (tmpSolutionBinary[i] == 1)
-                    sumValuesTmp += values[i];
-            }
-
-            if (sumValuesBest > sumValuesTmp) {
-                bestSolution = tmpSolution;
-            }
-            count++;
+            return bestSolution.getSumValues();
         }
-    }
+
 
     public Solution lowerBound() {
         sort();
