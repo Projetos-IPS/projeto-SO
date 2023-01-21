@@ -27,7 +27,6 @@ public class Ajkp extends Thread {
         this.weights = file.getWeight();
     }
 
-
     public int Ajkp() throws FileNotFoundException, InterruptedException {
             sort();
 
@@ -73,8 +72,6 @@ public class Ajkp extends Thread {
             e.printStackTrace();
         }
     }
-
-
 
     public Solution lowerBound() {
         sort();
