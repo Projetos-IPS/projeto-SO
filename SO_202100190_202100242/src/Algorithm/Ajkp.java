@@ -2,6 +2,7 @@ package Algorithm;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class Ajkp extends Thread{
@@ -330,6 +331,8 @@ public class Ajkp extends Thread{
 
     public static class Base {
         private int iterations, finalValue, finalWeight, threadUpdate = 0;
+
+        int[] finalSolution;
         static int threadNumber;
         private double bestTime = 0;
 
@@ -341,6 +344,7 @@ public class Ajkp extends Thread{
             if (this.getFinalValue() < solution.getSumValues()) {
                 this.setFinalValue(solution.getSumValues());
                 this.setFinalWeight(solution.getSumWeights());
+                this.setFinalSolution(solution.getSolution());
                 this.setIterations(solution.getIterations());
                 this.setBestTime(solution.getTime());
             }
@@ -348,6 +352,14 @@ public class Ajkp extends Thread{
             threadUpdate++;
             if (threadUpdate == threadNumber)
                 notify();
+        }
+
+        public void setFinalSolution(int[] finalSolution) {
+            this.finalSolution = finalSolution;
+        }
+
+        public int[] getFinalSolution() {
+            return finalSolution;
         }
 
         /**public synchronized void print() {
@@ -374,6 +386,7 @@ public class Ajkp extends Thread{
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
+            System.out.println("Final knapsack: " + Arrays.toString(this.getFinalSolution()));
             System.out.println("Final Value: " + this.getFinalValue());
             System.out.println("Final Weight: " + this.getFinalWeight());
             System.out.println("Best Iteration: " + this.getIterations());
