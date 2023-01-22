@@ -2,6 +2,7 @@ package Algorithm;
 
 import java.io.FileNotFoundException;
 import java.sql.SQLOutput;
+import java.text.DecimalFormat;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Random;
@@ -198,35 +199,40 @@ public class Ajkp extends Thread{
         for(int i = 0; i < items; i++)
             newSolution[i] = -1;
 
-        solutions.add(new Solution(newSolution, 0,0,0));
+        solutions.add(new Solution(newSolution, 0, 0, 0));
         return solutions;
     }
 
     public ArrayList<Solution> getChilds(ArrayList<Solution> solutions) {
         ArrayList<Solution> childs = new ArrayList<>();
 
-        for (Solution l : solutions) {
-            int index = l.getLevel();
-            if (index < l.getLevel()) {
-                int[] new_sol = l.getSolution();
-                new_sol[index] = 0;
+        for (int i = 0; i < items; i++) {
+            if (solutions.get(i).getLevel() == i) {
+                int count = 0, countLevel = 0, sumV = 0, sumW = 0;;
+                int[] sol = solutions.get(i).getSolution();
 
-                l.setSolution(new_sol);
-                childs.add(l);
-                new_sol[index] = 1;
-
-                int w = 0;
-                int v = 0;
-
-                for (int i = 0; i < new_sol.length; i++)
-                    if (new_sol[i] == 1) {
-                        w += getWeights()[i];
-                        v += getValues()[i];
+                for (int j = 0; j < items; j++)
+                    if (sol[j] == -1) {
+                        sol[j] = 1;
+                        break;
                     }
 
-                if (w <= maxWeight)
-                    childs.add(new Solution(new_sol, w, v, index + 1));
+                for (int j = 0; j < items; j++)
+                    if (sol[j] == 1) {
+                        sumV += values[i];
+                        sumW += weights[i];
+                        count++;
+                    }
 
+
+                Solution newSolution = new Solution(sol, sumW, sumV, count);
+                solutions.add(newSolution);
+
+                if (sumW <= maxWeight) {
+                    countLevel++;
+                    Solution goodSolution = new Solution(sol, sumW, sumV, countLevel);
+                    childs.add(goodSolution);
+                }
             }
         }
         return childs;
@@ -252,9 +258,7 @@ public class Ajkp extends Thread{
     }
 
     public Solution beamSearch(int n, Solution lb) {
-        ArrayList<Solution> start = new ArrayList<>();
-        start.ensureCapacity(items);
-        start = initialSolution();
+        ArrayList<Solution> start = initialSolution();
 
         while (!start.isEmpty()) {
             start = getChilds(start);
@@ -271,6 +275,28 @@ public class Ajkp extends Thread{
             start = selectSolutions(n, start);
         }
         return lb;
+        /**ArrayList<Solution> start = initialSolution();
+
+        while (start.isEmpty() == false) {
+            start = getChilds(start);
+
+            for (Solution sol : start) {
+                int ub = upperBound(sol);
+                int lb_int = lb.getSumValues();
+
+                if (ub >= lb_int) {
+                    if (sol.getSumValues() > lb_int)
+                        lb = sol;
+                }
+                else {
+                    start.remove(sol);
+                }
+
+            }
+            start = selectSolutions(n, start);
+
+        }
+        return lb;**/
     }
 
     public void sort() {
@@ -387,10 +413,13 @@ public class Ajkp extends Thread{
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
+            System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
             System.out.println("Final Value: " + this.getBestValue());
             System.out.println("Final Weight: " + this.getBestWeight());
             System.out.println("Best Iteration: " + this.getIterations());
-            System.out.println("Best Time: " + this.getBestTime() / 1000);
+            DecimalFormat formatter = new DecimalFormat("#0.00000");
+            System.out.println("Best Time: " + formatter.format(this.getBestTime()) + " seconds");
+            System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
         }
 
         public int getBestValue() { return bestValue; }
