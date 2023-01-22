@@ -386,7 +386,7 @@ public class Ajkp extends Thread{
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
-            System.out.println("Final knapsack: " + Arrays.toString(this.getFinalSolution()));
+            System.out.println("Final ordered knapsack: " + Arrays.toString(this.getFinalSolution()));
             System.out.println("Final Value: " + this.getFinalValue());
             System.out.println("Final Weight: " + this.getFinalWeight());
             System.out.println("Best Iteration: " + this.getIterations());
