@@ -21,6 +21,11 @@ public class Solution {
     public int getSumWeights() { return sumWeights; }
 
     public int getLevel() {
+        for(int i = 0; i < solution.length; i++)
+            if(solution[i] == -1) {
+                level = i;
+                break;
+            }
         return level;
     }
 
