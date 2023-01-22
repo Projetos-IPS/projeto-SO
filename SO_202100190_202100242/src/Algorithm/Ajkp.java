@@ -338,7 +338,7 @@ public class Ajkp extends Thread{
         }
 
         public synchronized void updateSolution(Solution solution) {
-            if (this.getFinalValue() > solution.getSumValues()) {
+            if (this.getFinalValue() < solution.getSumValues()) {
                 this.setFinalValue(solution.getSumValues());
                 this.setFinalWeight(solution.getSumWeights());
                 this.setIterations(solution.getIterations());
