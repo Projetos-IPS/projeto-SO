@@ -194,12 +194,37 @@ public class Ajkp extends Thread{
     public ArrayList<Solution> initialSolution() {
         ArrayList<Solution> solutions = new ArrayList<>();
         int[] newSolution = new int[items];
+        Random rand = new Random();
 
         for(int i = 0; i < items; i++)
             newSolution[i] = -1;
 
-        solutions.add(new Solution(newSolution, 0,0,items));
+        solutions.add(new Solution(newSolution, 0,0,0));
         return solutions;
+    }
+
+    public Solution beamSearch(int n, Solution lb) {
+        ArrayList<Solution> start = initialSolution();
+
+        while (start.isEmpty() == false) {
+            start = getChilds(start);
+
+            for (Solution sol : start) {
+                int ub = upperBound(sol);
+                int lb_int = lb.getSumValues();
+
+                if (ub >= lb_int) {
+                    if (sol.getSumValues() > lb_int)
+                        lb = sol;
+                }
+                else {
+                    start.remove(sol);
+                }
+                start = selectSolutions(n, start);
+            }
+
+        }
+        return lb;
     }
 
     public ArrayList<Solution> selectSolutions(int n, ArrayList<Solution> list) {
@@ -221,35 +246,13 @@ public class Ajkp extends Thread{
             return list;
     }
 
-    public Solution beamSearch(int n, Solution lb) {
-        ArrayList<Solution> start = initialSolution();
-
-        while (start.isEmpty() == false) {
-            start = getChilds(start);
-
-            for (Solution sol : start) {
-                int ub = upperBound(sol);
-                int lb_int = lb.getSumValues();
-
-                if (ub >= lb_int) {
-                    if (sol.getSumValues() > lb_int)
-                        lb = sol;
-                }
-                else {
-                    start.remove(sol);
-                }
-            }
-            start = selectSolutions(n, start);
-        }
-        return lb;
-    }
-
     public ArrayList<Solution> getChilds(ArrayList<Solution> solutions) {
         ArrayList<Solution> childs = new ArrayList<>();
 
+
         for (Solution l : solutions) {
-            int index = l.getLevel();
-            if (index < l.getLevel()) {
+           int index = l.getLevel();
+            if (index < l.getLevel()){
                 int[] new_sol = l.getSolution();
                 new_sol[index] = 0;
 
@@ -261,7 +264,7 @@ public class Ajkp extends Thread{
                  int v = l.getSumValues();
 
                 if (w <= maxWeight) {
-                    childs.add(new Solution(new_sol, w, v, index + 1));
+                    childs.add(new Solution(new_sol, w, v, index+1));
                 }
             }
         }
