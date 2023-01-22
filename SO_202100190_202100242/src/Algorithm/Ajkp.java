@@ -16,8 +16,9 @@ public class Ajkp extends Thread{
     int[] values, weights;
     Solution lowerBoundSolution;
     int indexLowerBound = 0;
+
     int indexUpperBound = 0;
-    int items, maxWeight;
+    int items, maxWeight, maxValue;
     private double seconds;
 
     public Ajkp(String filename, double seconds) throws FileNotFoundException {
@@ -30,6 +31,7 @@ public class Ajkp extends Thread{
         this.maxWeight = file.getMax_weight();
         this.values = file.getValue();
         this.weights = file.getWeight();
+        this.maxValue = file.getIdeal_value();
     }
 
     public void Ajkp() throws FileNotFoundException, InterruptedException {
@@ -204,37 +206,38 @@ public class Ajkp extends Thread{
 
     public ArrayList<Solution> getChilds(ArrayList<Solution> solutions) {
         ArrayList<Solution> childs = new ArrayList<>();
+        int v = 0;
+        int w = 0;
 
-        for (int i = 0; i < childs.size(); i++) {
-            //System.out.println("ESTOU AQUI" + i);
-            System.out.println(solutions.get(i).getLevel());
-            if (solutions.get(i).getLevel() == i) {
-                int count = 0, sumV = 0, sumW = 0;
-                int[] sol = solutions.get(i).getSolution().clone();
+        for(int x = 0; x < childs.size(); x++) {
+            for (Solution l : solutions) {
+                int index = l.getLevel();
+                if (index < items) {
+                    int[] new_sol = l.getSolution();
+                    new_sol[index] = 0;
 
-                sol[i] = 1;
+                    l.setSolution(new_sol);
+                    childs.add(l);
+                    new_sol[index] = 1;
 
-                for (int j = 0; j < items; j++)
-                    if (sol[j] == 1) {
-                        sumV += values[i];
-                        sumW += weights[i];
-                        count++;
+                    for (int k = 0; k < items; k++) {
+                        if (new_sol[k] == 1) {
+                            w += weights[k];
+                            v += values[k];
+
+                        }
                     }
 
-                Solution newSolution = new Solution(sol, sumW, sumV, count);
-                solutions.add(newSolution);
+                    if (w <= maxWeight) {
+                        childs.add(new Solution(new_sol, w, v, index + 1));
+                        if (v == maxValue) break;
+                    }
 
-                if (sumW <= maxWeight) {
-                    Solution goodSolution = new Solution(sol, sumW, sumV, count);
-                    childs.add(goodSolution);
                 }
-                else {
-                    sol[i] = 0;
-                    Solution goodSolution = new Solution(sol, sumW, sumV, count-1);
-                    childs.add(goodSolution);
-                }
+
             }
         }
+
         return childs;
     }
 
