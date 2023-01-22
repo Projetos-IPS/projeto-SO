@@ -7,15 +7,9 @@ public class Main {
     public static final String GREEN = "\u001B[32m";
     public static final String RESET = "\u001B[0m";
     public static void main(String[] args) throws FileNotFoundException, InterruptedException {
-
-        /** MAIN FINAL - NÃO APAGAR
         Scanner scanner = new Scanner(System.in);
         System.out.println(GREEN + "Enter command >" + RESET);
-        String command = scanner.nextLine();**/
-
-        //String command = "1 ex05 2 5";
-        //String command = "1 ex08 2 5";
-        String command = "1 ex10_60 2 5";
+        String command = scanner.nextLine();
 
         String[] commandSplice = command.split(" ");
         int test = Integer.parseInt(commandSplice[0]);
