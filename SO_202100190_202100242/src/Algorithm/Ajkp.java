@@ -43,6 +43,7 @@ public class Ajkp extends Thread{
             long end = System.currentTimeMillis();
             float sec = (end - start) / 1000F;
             iterationSolution.setTime(sec);
+            iterationSolution.setIterations(count);
             Solution bestSolutionFound = iterationSolution;
 
             do {
@@ -68,8 +69,16 @@ public class Ajkp extends Thread{
 
                 if (sumVBest < sumVTmp)
                     bestSolutionFound = tmpSolution;
-                else
-                    System.out.println(count);
+                else {
+                    //System.out.println(count);
+                    int[] tmpArr = tmpSolution.getSolution();
+                    for (int i = 0; i < items; i++) {
+                        if (tmpArr[i] == -1)
+                            tmpArr[i] = 0;
+                        System.out.print(tmpArr[i]);
+                    }
+                    System.out.println("\n");
+                }
 
                 /*iterationSolution.setIterations(count);
                 System.out.println(System.currentTimeMillis() - startTime);
@@ -267,17 +276,14 @@ public class Ajkp extends Thread{
                 int ub = upperBound(sol);
                 int lb_int = lb.getSumValues();
 
-                if (ub >= lb_int) {
+                if (ub >= lb_int)
                     if (sol.getSumValues() > lb_int)
                         lb = sol;
-                }
-                else {
+                else
                     start.remove(sol);
-                }
 
             }
             start = selectSolutions(n, start);
-
         }
         return lb;
     }
