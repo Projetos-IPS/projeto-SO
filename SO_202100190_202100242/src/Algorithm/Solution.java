@@ -41,4 +41,9 @@ public class Solution {
     public double getTime() { return time; }
 
     public void setTime(double time) { this.time = time; }
+
+    @Override
+    public String toString() {
+        return "Value: " + getSumValues() + "\nWeight: " + getSumWeights() + "\nIteration: " + getIterations() + "\nTime: " + getTime();
+    }
 }

@@ -22,7 +22,7 @@ public class Main {
         int seconds = Integer.parseInt(commandSplice[3]);
 
         Ajkp.Base bestSolution = new Ajkp.Base(threads);
-        Ajkp.bestResult = bestSolution;
+        Ajkp.bestSolution = bestSolution;
 
         for (int i = 0; i < threads; i++) {
             Ajkp algorithm = new Ajkp(filename, seconds);
