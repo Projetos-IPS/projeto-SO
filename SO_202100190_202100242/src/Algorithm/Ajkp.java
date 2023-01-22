@@ -205,17 +205,15 @@ public class Ajkp extends Thread{
 
     public ArrayList<Solution> getChilds(ArrayList<Solution> solutions) {
         ArrayList<Solution> childs = new ArrayList<>();
+        childs.ensureCapacity(items);
 
-        for (int i = 0; i < items; i++) {
+        for (int i = 0; i < childs.size(); i++) {
             if (solutions.get(i).getLevel() == i) {
-                int count = 0, countLevel = 0, sumV = 0, sumW = 0;;
-                int[] sol = solutions.get(i).getSolution();
+                int count = 0, sumV = 0, sumW = 0;
+                int[] sol = solutions.get(i).getSolution().clone();
+                System.out.println(solutions.get(i).getLevel());
 
-                for (int j = 0; j < items; j++)
-                    if (sol[j] == -1) {
-                        sol[j] = 1;
-                        break;
-                    }
+                sol[i] = 1;
 
                 for (int j = 0; j < items; j++)
                     if (sol[j] == 1) {
@@ -224,13 +222,16 @@ public class Ajkp extends Thread{
                         count++;
                     }
 
-
                 Solution newSolution = new Solution(sol, sumW, sumV, count);
                 solutions.add(newSolution);
 
                 if (sumW <= maxWeight) {
-                    countLevel++;
-                    Solution goodSolution = new Solution(sol, sumW, sumV, countLevel);
+                    Solution goodSolution = new Solution(sol, sumW, sumV, count);
+                    childs.add(goodSolution);
+                }
+                else {
+                    sol[i] = 0;
+                    Solution goodSolution = new Solution(sol, sumW, sumV, count-1);
                     childs.add(goodSolution);
                 }
             }
@@ -265,23 +266,6 @@ public class Ajkp extends Thread{
 
             for (Solution sol : start) {
                 int ub = upperBound(sol);
-
-                if (ub >= lb.getSumValues())
-                    if (sol.getSumValues() > lb.getSumValues())
-                            lb = sol;
-                else
-                    start.remove(sol);
-            }
-            start = selectSolutions(n, start);
-        }
-        return lb;
-        /**ArrayList<Solution> start = initialSolution();
-
-        while (start.isEmpty() == false) {
-            start = getChilds(start);
-
-            for (Solution sol : start) {
-                int ub = upperBound(sol);
                 int lb_int = lb.getSumValues();
 
                 if (ub >= lb_int) {
@@ -296,7 +280,7 @@ public class Ajkp extends Thread{
             start = selectSolutions(n, start);
 
         }
-        return lb;**/
+        return lb;
     }
 
     public void sort() {
