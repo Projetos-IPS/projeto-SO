@@ -13,7 +13,8 @@ public class Main {
         System.out.println(GREEN + "Enter command >" + RESET);
         String command = scanner.nextLine();**/
 
-        String command = "1 ex40 3 10";
+        String command = "1 ex08 3 5";
+
 
         String[] commandSplice = command.split(" ");
         int test = Integer.parseInt(commandSplice[0]);
@@ -23,6 +24,9 @@ public class Main {
 
         Ajkp.Base bestSolution = new Ajkp.Base(threads);
         Ajkp.bestResult = bestSolution;
+
+        Ajkp sorted = new Ajkp(filename);
+        sorted.printSort();
 
         for (int i = 0; i < threads; i++) {
             Ajkp algorithm = new Ajkp(filename, seconds);

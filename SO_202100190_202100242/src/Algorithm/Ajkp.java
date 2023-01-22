@@ -30,6 +30,15 @@ public class Ajkp extends Thread{
         this.weights = file.getWeight();
     }
 
+    public Ajkp(String filename) throws FileNotFoundException {
+        this.filename = filename;
+        file.Load(filename);
+        this.items = file.getItems();
+        this.maxWeight = file.getMax_weight();
+        this.values = file.getValue();
+        this.weights = file.getWeight();
+    }
+
     public void Ajkp() throws FileNotFoundException, InterruptedException {
         int count = 0, threadUpdate = 0;
         double startTime;
@@ -283,10 +292,9 @@ public class Ajkp extends Thread{
         sort();
 
         System.out.println("\n▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
-        System.out.println("\nValue | Weight");
-
-        for (int i = 0; i < file.getItems(); i++)
-            System.out.println("|" + String.format("%03d", values[i]) + "|   " + "|" + String.format("%03d", weights[i]) + "|");
+        System.out.println("Sorted knapsack");
+        System.out.println(Arrays.toString(values));
+        System.out.println(Arrays.toString(weights));
 
         System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
     }
@@ -386,7 +394,7 @@ public class Ajkp extends Thread{
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
-            System.out.println("Final ordered knapsack: " + Arrays.toString(this.getFinalSolution()));
+            System.out.println("Final sorted knapsack: " + Arrays.toString(this.getFinalSolution()));
             System.out.println("Final Value: " + this.getFinalValue());
             System.out.println("Final Weight: " + this.getFinalWeight());
             System.out.println("Best Iteration: " + this.getIterations());
