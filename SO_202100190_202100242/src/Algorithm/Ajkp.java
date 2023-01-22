@@ -15,7 +15,7 @@ public class Ajkp extends Thread{
     Solution lowerBoundSolution;
     int indexLowerBound = 0;
     int indexUpperBound = 0;
-    int items, maxWeight;
+    int items, maxWeight, maxValue;
     private int threads;
     private double seconds;
 
@@ -27,6 +27,7 @@ public class Ajkp extends Thread{
         this.items = file.getItems();
         this.maxWeight = file.getMax_weight();
         this.values = file.getValue();
+        this.maxValue = file.getIdeal_value();
         this.weights = file.getWeight();
     }
 
@@ -248,28 +249,41 @@ public class Ajkp extends Thread{
 
     public ArrayList<Solution> getChilds(ArrayList<Solution> solutions) {
         ArrayList<Solution> childs = new ArrayList<>();
+        int somaV = 0, somaW = 0;
 
+        for (int i = 0; i < childs.size(); i++) {
+            int index = childs.get(i).getLevel();
+            if (index<childs.get(i).getSolution().length) {
+                int[] sol = solutions.get(i).getSolution();
+                sol[i] = 0;
+                solutions.get(i).setSolution(sol);
+                childs.add(solutions.get(i));
+                sol[i]=1;
+                if(sol[i] == 1)
+                {
+                    somaV+=values[i];
+                    somaW+=weights[i];
+                }
 
-        for (Solution l : solutions) {
-           int index = l.getLevel();
-            if (index < l.getLevel()){
-                int[] new_sol = l.getSolution();
-                new_sol[index] = 0;
+                if(somaV>maxValue) {
+                    sol[i] = 0;
+                    somaV -= values[i];
+                    somaW -= weights[i];
+                }
 
-                l.setSolution(new_sol);
-                childs.add(l);
-                new_sol[index] = 1;
-
-                 int w = l.getSumWeights();
-                 int v = l.getSumValues();
-
-                if (w <= maxWeight) {
-                    childs.add(new Solution(new_sol, w, v, index+1));
+                if(solutions.get(i).getSumWeights()<=maxWeight)
+                {
+                    childs.add(new Solution(sol, somaW, somaV, index+1));
+                    if(somaV == maxValue)
+                    {
+                        break;
+                    }
                 }
             }
         }
         return childs;
     }
+
 
     public void sort() {
         int tempV = 0;
@@ -299,40 +313,6 @@ public class Ajkp extends Thread{
 
         System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
     }
-
-    /**public void printLowerBound() {
-        int lowerBound = lowerBound();
-        int[] lowerBoundS = lowerBoundSolution.getSolution();
-        System.out.println("\n▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
-        System.out.print("KnapSack LowerBound:\n[");
-        for (int i = 0; i < items; i++) {
-            if (i != items-1)
-                System.out.print(lowerBoundS[i] + ", ");
-            else
-                System.out.println(lowerBoundS[i] + "]");
-        }
-        System.out.println("Index LowerBound: " + indexLowerBound);
-        System.out.println("LowerBound Value: " + lowerBound);
-        System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
-    }
-
-    public void printUpperBound() {
-        int[] arr = {1, 0, -1, -1, -1, -1};
-        Solution arrS = new Solution(arr);
-        int upperBound = upperBound(arrS);
-        int[] upperBoundS = upperBoundSolution.getSolution();
-        System.out.println("\n▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
-        System.out.print("KnapSack UpperBound:\n[");
-        for (int i = 0; i < items; i++) {
-            if (i != items-1)
-                System.out.print(upperBoundS[i] + ", ");
-            else
-                System.out.println(upperBoundS[i] + "]");
-        }
-        System.out.println("Index UpperBound: " + indexUpperBound);
-        System.out.println("UpperBound Value: " + upperBound);
-        System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
-    }**/
 
     public int[] getValues() { return values; };
 
@@ -370,24 +350,6 @@ public class Ajkp extends Thread{
         public int[] getFinalSolution() {
             return finalSolution;
         }
-
-        /**public synchronized void print() {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-         
-            //System.out.println("Number of Items: " + file.getItems());
-            System.out.println("Total Runtime: " );
-            System.out.println("Number of Threads: " + threadNumber);
-
-            System.out.println("Best Solution: " );
-            System.out.println("Best Solution Weight: " );
-            System.out.println("Time To Best Solution: " );
-            System.out.println("Number of Iterations to Best Solution: " );
-            System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
-        }**/
 
         public synchronized void print() {
             try {
