@@ -5,6 +5,7 @@ import java.sql.SQLOutput;
 import java.text.DecimalFormat;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class Ajkp extends Thread{
@@ -315,39 +316,6 @@ public class Ajkp extends Thread{
         System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
     }
 
-    /**public void printLowerBound() {
-        int lowerBound = lowerBound();
-        int[] lowerBoundS = lowerBoundSolution.getSolution();
-        System.out.println("\n▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
-        System.out.print("KnapSack LowerBound:\n[");
-        for (int i = 0; i < items; i++) {
-            if (i != items-1)
-                System.out.print(lowerBoundS[i] + ", ");
-            else
-                System.out.println(lowerBoundS[i] + "]");
-        }
-        System.out.println("Index LowerBound: " + indexLowerBound);
-        System.out.println("LowerBound Value: " + lowerBound);
-        System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
-    }
-
-    public void printUpperBound() {
-        int[] arr = {1, 0, -1, -1, -1, -1};
-        Solution arrS = new Solution(arr);
-        int upperBound = upperBound(arrS);
-        int[] upperBoundS = upperBoundSolution.getSolution();
-        System.out.println("\n▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
-        System.out.print("KnapSack UpperBound:\n[");
-        for (int i = 0; i < items; i++) {
-            if (i != items-1)
-                System.out.print(upperBoundS[i] + ", ");
-            else
-                System.out.println(upperBoundS[i] + "]");
-        }
-        System.out.println("Index UpperBound: " + indexUpperBound);
-        System.out.println("UpperBound Value: " + upperBound);
-        System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
-    }**/
 
     public int[] getValues() { return values; };
 
@@ -358,13 +326,23 @@ public class Ajkp extends Thread{
         static int threadNumber;
         private double bestTime = 0;
 
+        int[] finalSolution;
         public Base(int threads) {
             threadNumber = threads;
+        }
+
+        public void setFinalSolution(int[] finalSolution) {
+            this.finalSolution = finalSolution;
+        }
+
+        public int[] getFinalSolution() {
+            return finalSolution;
         }
 
         public synchronized void updateSolution(Solution solution) {
             if (this.getBestValue() < solution.getSumValues()) {
                 this.setBestValue(solution.getSumValues());
+                this.setFinalSolution(solution.getSolution());
                 this.setBestWeight(solution.getSumWeights());
                 this.setIterations(solution.getIterations());
                 this.setBestTime(solution.getTime());
@@ -375,24 +353,6 @@ public class Ajkp extends Thread{
                 notify();
         }
 
-        /**public synchronized void print() {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-         
-            //System.out.println("Number of Items: " + file.getItems());
-            System.out.println("Total Runtime: " );
-            System.out.println("Number of Threads: " + threadNumber);
-
-            System.out.println("Best Solution: " );
-            System.out.println("Best Solution Weight: " );
-            System.out.println("Time To Best Solution: " );
-            System.out.println("Number of Iterations to Best Solution: " );
-            System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
-        }**/
-
         public synchronized void print() {
             try {
                 wait();
@@ -400,6 +360,7 @@ public class Ajkp extends Thread{
                 Thread.currentThread().interrupt();
             }
             System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
+            System.out.println("Final sorted knapsack: " + Arrays.toString(this.getFinalSolution()));
             System.out.println("Final Value: " + this.getBestValue());
             System.out.println("Final Weight: " + this.getBestWeight());
             System.out.println("Best Iteration: " + this.getIterations());
@@ -411,6 +372,8 @@ public class Ajkp extends Thread{
         public int getBestValue() { return bestValue; }
 
         public void setBestValue(int bestValue) { this.bestValue = bestValue; }
+
+
 
         public int getBestWeight() { return bestWeight; }
 
