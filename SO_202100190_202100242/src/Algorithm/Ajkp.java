@@ -2,17 +2,20 @@ package Algorithm;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
-public class Ajkp extends Thread {
+public class Ajkp extends Thread{
     private FileLoader file = new FileLoader();
+    public static Base bestResult;
+    public static Solution personalBestResult;
+    
     private String filename;
     int[] values, weights;
     Solution lowerBoundSolution;
     int indexLowerBound = 0;
     int indexUpperBound = 0;
     int items, maxWeight;
+    private int threads;
     private double seconds;
 
     public Ajkp(String filename, double seconds) throws FileNotFoundException {
@@ -26,31 +29,27 @@ public class Ajkp extends Thread {
         this.weights = file.getWeight();
     }
 
-    public int Ajkp() {
+    public void Ajkp() throws FileNotFoundException, InterruptedException {
+        int count = 0, threadUpdate = 0;
+        double startTime;
+
+        file.Load(filename);
+
         sort();
 
-        Solution bestSolution = lowerBound();
-
-        /**
-        int count = 0;
-        double startTime, endTime;
-        int[] finalKnapsack = new int[items];
-
-        startTime = System.currentTimeMillis(); **/
-        seconds = System.currentTimeMillis() + seconds * 1000;
-
-        while (System.currentTimeMillis() < seconds) {
-            bestSolution = lowerBound();
+        startTime = System.currentTimeMillis();
+        while (System.currentTimeMillis() < startTime + seconds * 1000) {
+            personalBestResult = lowerBound();
 
             int sumValuesBest = 0;
             int sumValuesTmp = 0;
 
             int n = items / 2;
-            Solution tmpSolution = beamSearch(n, bestSolution);
+            Solution tmpSolution = beamSearch(n, personalBestResult);
 
             for (int i = 0; i < items; i++) {
-                int[] bestSolutionBinary = bestSolution.getSolution();
-                if (bestSolutionBinary[i] == 1)
+                int[] personalBestResultBinary = personalBestResult.getSolution();
+                if (personalBestResultBinary[i] == 1)
                     sumValuesBest += values[i];
             }
 
@@ -61,10 +60,29 @@ public class Ajkp extends Thread {
             }
 
             if (sumValuesBest > sumValuesTmp)
-                bestSolution = tmpSolution;
+                personalBestResult = tmpSolution;
+
+            if (personalBestResult.getSumValues() > bestResult.getFinalValue()) {
+                personalBestResult.setIterations(count);
+                personalBestResult.setTime(System.currentTimeMillis() - startTime);
+            }
+
+            count++;
         }
 
-        return bestSolution.getSumValues();
+        bestResult.updateSolution(personalBestResult);
+        //return personalBestResult.getSumValues();
+    }
+
+    @Override
+    public void run() {
+        try {
+            Ajkp();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public Solution lowerBound() {
@@ -89,7 +107,9 @@ public class Ajkp extends Thread {
         for (int i = indexLowerBound - 1; i < items; i++)
             knapsackLowerBound[i] = -1;
 
-        lowerBoundSolution = new Solution(knapsackLowerBound, sumW2, sumV, lowerBoundSolution.getLevel());
+        lowerBoundSolution = new Solution(knapsackLowerBound, sumW2, sumV, 0);
+        int level = lowerBoundSolution.getLevel();
+        lowerBoundSolution.setLevel(level);
 
         return lowerBoundSolution;
     }
@@ -307,4 +327,78 @@ public class Ajkp extends Thread {
     public int[] getValues() { return values; };
 
     public int[] getWeights() { return weights; }
+
+    public static class Base {
+        private int iterations, finalValue, finalWeight, threadUpdate = 0;
+        static int threadNumber;
+        private double bestTime = 0;
+
+        public Base(int threads) {
+            threadNumber = threads;
+        }
+
+        public synchronized void updateSolution(Solution solution) {
+            if (this.getFinalValue() > solution.getSumValues()) {
+                this.setFinalValue(solution.getSumValues());
+                this.setFinalWeight(solution.getSumWeights());
+                this.setIterations(solution.getIterations());
+                this.setBestTime(solution.getTime());
+            }
+
+            threadUpdate++;
+            if (threadUpdate == threadNumber)
+                notify();
+        }
+
+        /**public synchronized void print() {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+         
+            //System.out.println("Number of Items: " + file.getItems());
+            System.out.println("Total Runtime: " );
+            System.out.println("Number of Threads: " + threadNumber);
+
+            System.out.println("Best Solution: " );
+            System.out.println("Best Solution Weight: " );
+            System.out.println("Time To Best Solution: " );
+            System.out.println("Number of Iterations to Best Solution: " );
+            System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
+        }**/
+
+        public synchronized void print() {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            System.out.println("Final Value: " + this.getFinalValue());
+            System.out.println("Final Weight: " + this.getFinalWeight());
+            System.out.println("Best Iteration: " + this.getIterations());
+            System.out.println("Best Time: " + this.getBestTime() / 1000);
+        }
+
+        public int getFinalValue() { return finalValue; }
+
+        public void setFinalValue(int finalValue) { this.finalValue = finalValue; }
+
+        public int getFinalWeight() { return finalWeight; }
+
+        public void setFinalWeight(int finalWeight) { this.finalWeight = finalWeight; }
+
+        public int getIterations() { return iterations; }
+
+        public void setIterations(int iterations) { this.iterations = iterations; }
+
+        public double getBestTime() { return bestTime; }
+
+        public void setBestTime(double bestTime) { this.bestTime = bestTime; }
+
+        @Override
+        public String toString() {
+            return "Final Value: " + finalValue + "\nFinal Weight: " + finalWeight;
+        }
+    }
 }

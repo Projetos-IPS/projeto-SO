@@ -1,8 +1,10 @@
 package Algorithm;
 
 public class Solution {
-    int[] solution;
-    int sumValues, sumWeights, level;
+    private int[] solution;
+    private int sumValues, sumWeights, level, iterations;
+    private double time;
+
 
     public Solution(int[] solution, int sumWeights, int sumValues, int level) {
         this.solution = solution;
@@ -26,7 +28,17 @@ public class Solution {
         return level;
     }
 
+    public void setLevel(int level) { this.level = level; }
+
     public int countElements() { return solution.length; }
 
     public int[] getSolution() { return solution; }
+
+    public int getIterations() { return iterations; }
+
+    public void setIterations(int iterations) { this.iterations = iterations; }
+
+    public double getTime() { return time; }
+
+    public void setTime(double time) { this.time = time; }
 }
