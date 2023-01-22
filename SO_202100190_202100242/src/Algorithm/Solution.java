@@ -11,6 +11,7 @@ public class Solution {
         this.sumWeights = sumWeights;
         this.sumValues = sumValues;
         this.level = level;
+
     }
 
     public void setSolution(int sol[]) { this.solution = sol; }
@@ -20,11 +21,6 @@ public class Solution {
     public int getSumWeights() { return sumWeights; }
 
     public int getLevel() {
-        for(int i = 0; i < solution.length; i++)
-            if(solution[i] == -1) {
-                level = i;
-                break;
-            }
         return level;
     }
 

@@ -117,7 +117,7 @@ public class Ajkp extends Thread{
         for (int i = indexLowerBound - 1; i < items; i++)
             knapsackLowerBound[i] = -1;
 
-        lowerBoundSolution = new Solution(knapsackLowerBound, sumW2, sumV, 0);
+        lowerBoundSolution = new Solution(knapsackLowerBound, sumW2, sumV, items);
         int level = lowerBoundSolution.getLevel();
         lowerBoundSolution.setLevel(level);
 
@@ -198,38 +198,8 @@ public class Ajkp extends Thread{
         for(int i = 0; i < items; i++)
             newSolution[i] = -1;
 
-        solutions.add(new Solution(newSolution, 0,0,0));
+        solutions.add(new Solution(newSolution, 0,0,items));
         return solutions;
-    }
-
-    public ArrayList<Solution> getChilds(ArrayList<Solution> solutions) {
-        ArrayList<Solution> childs = new ArrayList<>();
-
-        for (Solution l : solutions) {
-            int index = l.getLevel();
-            if (index < l.getLevel()) {
-                int[] new_sol = l.getSolution();
-                new_sol[index] = 0;
-
-                l.setSolution(new_sol);
-                childs.add(l);
-                new_sol[index] = 1;
-
-                int w = 0;
-                int v = 0;
-
-                for (int i = 0; i < new_sol.length; i++)
-                    if (new_sol[i] == 1) {
-                        w += getWeights()[i];
-                        v += getValues()[i];
-                    }
-
-                if (w <= maxWeight)
-                    childs.add(new Solution(new_sol, w, v, index + 1));
-
-            }
-        }
-        return childs;
     }
 
     public ArrayList<Solution> selectSolutions(int n, ArrayList<Solution> list) {
@@ -261,13 +231,41 @@ public class Ajkp extends Thread{
                 int ub = upperBound(sol);
                 int lb_int = lb.getSumValues();
 
-                if (ub >= lb_int)
-                    if (sol.getSumValues()> lb_int)
+                if (ub >= lb_int) {
+                    if (sol.getSumValues() > lb_int)
                         lb = sol;
+                }
+                else {
+                    start.remove(sol);
+                }
             }
             start = selectSolutions(n, start);
         }
         return lb;
+    }
+
+    public ArrayList<Solution> getChilds(ArrayList<Solution> solutions) {
+        ArrayList<Solution> childs = new ArrayList<>();
+
+        for (Solution l : solutions) {
+            int index = l.getLevel();
+            if (index < l.getLevel()) {
+                int[] new_sol = l.getSolution();
+                new_sol[index] = 0;
+
+                l.setSolution(new_sol);
+                childs.add(l);
+                new_sol[index] = 1;
+
+                 int w = l.getSumWeights();
+                 int v = l.getSumValues();
+
+                if (w <= maxWeight) {
+                    childs.add(new Solution(new_sol, w, v, index + 1));
+                }
+            }
+        }
+        return childs;
     }
 
     public void sort() {
@@ -411,11 +409,11 @@ public class Ajkp extends Thread{
 
         public int getIterations() { return iterations; }
 
-        public void setIterations(int iterations) { this.iterations = iterations; }
+        public synchronized void setIterations(int iterations) { this.iterations = iterations; }
 
         public double getBestTime() { return bestTime; }
 
-        public void setBestTime(double bestTime) { this.bestTime = bestTime; }
+        public synchronized void setBestTime(double bestTime) { this.bestTime = bestTime; }
 
         @Override
         public String toString() {

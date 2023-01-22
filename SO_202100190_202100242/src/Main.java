@@ -25,8 +25,8 @@ public class Main {
         Ajkp.Base bestSolution = new Ajkp.Base(threads);
         Ajkp.bestResult = bestSolution;
 
-        Ajkp sorted = new Ajkp(filename);
-        sorted.printSort();
+     //   Ajkp sorted = new Ajkp(filename);
+     //  sorted.printSort();
 
         for (int i = 0; i < threads; i++) {
             Ajkp algorithm = new Ajkp(filename, seconds);
