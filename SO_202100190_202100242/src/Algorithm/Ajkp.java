@@ -231,7 +231,6 @@ public class Ajkp extends Thread{
 
                     if (w <= maxWeight) {
                         childs.add(new Solution(new_sol, w, v, index + 1));
-                        if (v == maxValue) break;
                     }
 
                 }

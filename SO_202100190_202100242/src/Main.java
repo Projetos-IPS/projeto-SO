@@ -13,7 +13,7 @@ public class Main {
         System.out.println(GREEN + "Enter command >" + RESET);
         String command = scanner.nextLine();**/
 
-        String command = "1 ex08 2 5";
+        String command = "1 ex10_60 2 5";
 
         String[] commandSplice = command.split(" ");
         int test = Integer.parseInt(commandSplice[0]);
