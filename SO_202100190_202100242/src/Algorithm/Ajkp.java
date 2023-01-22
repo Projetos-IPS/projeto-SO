@@ -33,16 +33,17 @@ public class Ajkp extends Thread{
     }
 
     public void Ajkp() throws FileNotFoundException, InterruptedException {
-            int count = 1;
+            int count = 1, sumVBest = 0;
             int n = items / 2;
 
             file.Load(filename);
             sort();
             iterationSolution = lowerBound();
-            double timer = 0;
-            int sumVBest = 0;
-            long start = System.currentTimeMillis();
-
+            long timer, start = System.currentTimeMillis();
+            long end = System.currentTimeMillis();
+            float sec = (end - start) / 1000F;
+            iterationSolution.setTime(sec);
+            Solution bestSolutionFound = iterationSolution;
 
             do {
                 int sumVTmp = 0;
@@ -59,15 +60,16 @@ public class Ajkp extends Thread{
                         sumVTmp += values[i];
                 }
 
-                long end = System.currentTimeMillis();
-                float sec = (end - start) / 1000F;
+                end = System.currentTimeMillis();
+                sec = (end - start) / 1000F;
                 //System.out.println(sec + " seconds");
                 tmpSolution.setTime(sec);
 
+
                 if (sumVBest < sumVTmp)
-                    iterationSolution = tmpSolution;
+                    bestSolutionFound = tmpSolution;
                 else
-                    System.out.println("NÃO É MAIOR");
+                    System.out.println(count);
 
                 /*iterationSolution.setIterations(count);
                 System.out.println(System.currentTimeMillis() - startTime);
@@ -78,11 +80,8 @@ public class Ajkp extends Thread{
                 timer = System.currentTimeMillis() - start;
             } while (timer < seconds * 1000);
 
-            bestSolution.updateSolution(iterationSolution);
-            String s = iterationSolution.toString();
-            //System.out.println(s);
-
-        //return iterationSolution.getSumValues();
+            bestSolution.updateSolution(bestSolutionFound);
+            String s = bestSolutionFound.toString();
     }
 
     @Override
@@ -205,13 +204,13 @@ public class Ajkp extends Thread{
 
     public ArrayList<Solution> getChilds(ArrayList<Solution> solutions) {
         ArrayList<Solution> childs = new ArrayList<>();
-        childs.ensureCapacity(items);
 
         for (int i = 0; i < childs.size(); i++) {
+            //System.out.println("ESTOU AQUI" + i);
+            System.out.println(solutions.get(i).getLevel());
             if (solutions.get(i).getLevel() == i) {
                 int count = 0, sumV = 0, sumW = 0;
                 int[] sol = solutions.get(i).getSolution().clone();
-                System.out.println(solutions.get(i).getLevel());
 
                 sol[i] = 1;
 
