@@ -210,7 +210,7 @@ public class Ajkp extends Thread{
         int v = 0;
         int w = 0;
 
-        for(int x = 0; x < childs.size(); x++) {
+
             for (Solution l : solutions) {
                 int index = l.getLevel();
                 if (index < items) {
@@ -231,11 +231,9 @@ public class Ajkp extends Thread{
 
                     if (w <= maxWeight) {
                         childs.add(new Solution(new_sol, w, v, index + 1));
+                        if(v == maxValue) break;
                     }
-
                 }
-
-            }
         }
 
         return childs;
