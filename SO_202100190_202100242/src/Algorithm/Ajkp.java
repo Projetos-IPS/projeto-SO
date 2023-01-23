@@ -207,33 +207,26 @@ public class Ajkp extends Thread{
 
     public ArrayList<Solution> getChilds(ArrayList<Solution> solutions) {
         ArrayList<Solution> childs = new ArrayList<>();
-        int v = 0;
-        int w = 0;
 
-
-            for (Solution l : solutions) {
-                int index = l.getLevel();
-                if (index < items) {
-                    int[] new_sol = l.getSolution();
-                    new_sol[index] = 0;
-
-                    l.setSolution(new_sol);
-                    childs.add(l);
-                    new_sol[index] = 1;
-
-                    for (int k = 0; k < items; k++) {
-                        if (new_sol[k] == 1) {
-                            w += weights[k];
-                            v += values[k];
-
-                        }
-                    }
-
-                    if (w <= maxWeight) {
-                        childs.add(new Solution(new_sol, w, v, index + 1));
-                        if(v == maxValue) break;
+        for(Solution sol : solutions) {
+            int idx = sol.getLevel();
+            if (idx < items) {
+                int[] new_sol = sol.getSolution();
+                new_sol[idx]= 0;
+                sol.setSolution(new_sol);
+                new_sol[idx] = 1;
+                int somaV = 0;
+                int somaW = 0;
+                for (int x = 0; x < sol.countElements(); x++) {
+                    if (new_sol[x] == 1) {
+                        somaV += values[x];
+                        somaW += weights[x];
                     }
                 }
+                if (somaW <= maxWeight) {
+                    childs.add(new Solution(new_sol, somaW, somaV, idx+1));
+                } else break;
+            }
         }
 
         return childs;
